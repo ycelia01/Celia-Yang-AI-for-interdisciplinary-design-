@@ -19,6 +19,7 @@ This package is prepared and tested locally; it has not been pushed or deployed 
 - `index.html` — introduction, draggable cattle with synthesized moo sounds and mute control, two project links.
 - `album.html` — complete finished cover, optional SoundCloud player, composition, comparisons, typography.
 - `studio.html` — final environment image, description, video with native playback controls, stills, references, revisions.
+- `mirage-bloom.html` — the Mirage Bloom game proposal (self-contained styles and script), with scene mockups and Ducklings screenshots in `assets/mirage-bloom/`. It loads Google Fonts, unlike the other pages.
 - `assets/styles.css`, `assets/site.js`, `assets/favicon.svg` — shared local design and behavior.
 - `assets/album/` — finished and earlier covers plus selected process images.
 - `assets/studio/` — finished image, process views, and optimized walkthrough MP4.

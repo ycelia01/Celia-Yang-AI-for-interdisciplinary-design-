@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mirage Bloom — Celia Yang</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Mirage Bloom: a slow, sound-grown saguaro game about hearing what is real and what only seems to be. AI for Design, Week 1 — research and pitch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#15122b; --dusk:#2a2050; --plum:#4a2a68; --ember:#e0704f; --sun:#f2b96b;
+  --sand:#f4e8d2; --sand2:#ebdcc0; --paper:#fbf5e8; --sage:#6f9a78; --sage-d:#2f5a44;
+  --bloom:#fff6e3; --ink:#1b1630; --mute:#5b5373; --line:rgba(27,22,48,.16);
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'DM Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;line-height:1.1;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:clamp(2rem,4.6vw,3.4rem)}
+h3{font-size:1.45rem}
+h4{font-size:1.1rem;font-family:var(--sans);font-weight:600;letter-spacing:0}
+p{margin:0 0 1em}
+.kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:1rem;display:block}
+.lede{font-size:1.2rem;max-width:60ch}
+.small{font-size:.9rem}
+.mute{color:var(--mute)}
+.dark .mute{color:#bdb4d6}
+
+/* nav */
+.top{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;gap:18px;padding:10px 20px;background:rgba(21,18,43,.78);backdrop-filter:blur(10px);color:var(--bloom);font-family:var(--mono);font-size:.75rem;letter-spacing:.06em}
+.top .brand{font-family:var(--serif);font-size:1.05rem;letter-spacing:0;text-decoration:none;white-space:nowrap}
+.top ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto}
+.top li a{display:block;padding:6px 10px;border-radius:99px;text-decoration:none;opacity:.7;white-space:nowrap}
+.top li a:hover{opacity:1}
+.top li a.on{background:var(--bloom);color:var(--night);opacity:1}
+.top .back{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:99px;border:1px solid rgba(255,246,227,.25);opacity:.9}
+.top .back:hover{background:rgba(255,246,227,.12)}
+.sound{font:inherit;color:inherit;background:transparent;border:1px solid rgba(255,246,227,.45);border-radius:99px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.sound[aria-pressed="true"]{background:var(--sun);color:var(--night);border-color:var(--sun)}
+.sound:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+@media(max-width:820px){.top ul{display:none}.top .brand{margin-right:auto}}
+
+/* sections */
+.sec{padding:clamp(72px,10vw,130px) 0;position:relative;scroll-margin-top:40px}
+.sec.dark{background:var(--night);color:var(--bloom)}
+.sec.dusk{background:linear-gradient(180deg,var(--dusk),#3a2563);color:var(--bloom)}
+.sec.light{background:var(--sand)}
+.sec.paper{background:var(--paper)}
+.num{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(4rem,10vw,8rem);line-height:.8;opacity:.18;display:block;margin-bottom:.1em}
+.head{max-width:760px;margin-bottom:3rem}
+.grid{display:grid;gap:22px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px}
+.light .card{background:var(--paper)}
+.dark .card,.dusk .card{background:rgba(255,246,227,.07);border-color:rgba(255,246,227,.18)}
+.card h4{margin-bottom:.35rem}
+.tag{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid currentColor;border-radius:99px;padding:2px 9px;opacity:.8;margin:0 6px 6px 0}
+.todo{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;background:#ffe34d;color:#1b1630;border-radius:4px;padding:1px 7px;vertical-align:middle}
+.ev{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.ev.c{background:#d7e6dc;color:#1f4331}.ev.o{background:#f6dcc9;color:#6b2e14}.ev.i{background:#dcd6f2;color:#2f2466}
+
+/* reveal */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.js .reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* hero */
+.hero{min-height:100vh;display:flex;align-items:flex-end;color:var(--bloom);overflow:hidden;background:var(--night);position:relative;padding:0}
+.hero-art{position:absolute;inset:0;width:100%;height:100%}
+.hero .wrap{position:relative;z-index:2;padding-bottom:clamp(40px,8vh,90px);padding-top:120px}
+.hero h1{font-size:clamp(3.4rem,11vw,9.5rem);font-weight:400;letter-spacing:-.03em;margin:0 0 .15em;text-shadow:0 2px 40px rgba(21,18,43,.5)}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--sun)}
+.hero p.sub{font-size:clamp(1.05rem,2vw,1.4rem);max-width:34ch;text-shadow:0 1px 18px rgba(21,18,43,.7)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.6rem}
+.btn{font-family:var(--mono);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:99px;border:1px solid var(--bloom);color:var(--bloom);background:transparent;cursor:pointer;display:inline-block}
+.btn.fill{background:var(--sun);border-color:var(--sun);color:var(--night)}
+.btn:hover{transform:translateY(-2px)}
+.hero .meta{position:absolute;z-index:2;left:24px;top:84px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;text-align:left;opacity:.9;line-height:1.8;text-shadow:0 1px 12px rgba(21,18,43,.8)}
+@media(max-width:700px){.hero .meta{display:none}}
+
+/* 01 proposal */
+.split{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;margin:1.6rem 0;padding:0}
+.facts div{border-top:1px solid rgba(255,246,227,.25);padding-top:8px}
+.facts dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.65}
+.facts dd{margin:0;font-size:1rem}
+.ask{border-left:3px solid var(--sun);padding:6px 0 6px 18px;margin-top:2rem}
+.demo{background:linear-gradient(180deg,#1b3a6b 0%,#4c5f9c 32%,#d98f86 62%,#f7c58f 80%,#fde8b8 100%);border-radius:22px;overflow:hidden;border:1px solid rgba(255,246,227,.2);position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.demo-bar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;background:rgba(21,18,43,.55)}
+#stage{position:relative;height:460px;touch-action:manipulation}
+#dsag{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%}
+#dTrunk,#dLeft,#dRight{display:none}
+#dCube,#dShadow{transform-box:fill-box;transform-origin:50% 100%}
+@media(prefers-reduced-motion:no-preference){#dCube{animation:sway 7s ease-in-out infinite alternate}.horb{animation:hdrift 9s ease-in-out infinite alternate}.horb:nth-child(2){animation-duration:12s}.horb:nth-child(3){animation-duration:10s}}
+@keyframes sway{from{transform:rotate(-.7deg)}to{transform:rotate(.7deg)}}
+@keyframes hdrift{from{transform:translateY(-8px)}to{transform:translateY(10px)}}
+.oshadow{position:absolute;width:44px;height:11px;margin:0 0 0 -22px;border-radius:50%;background:rgba(40,18,40,.45);filter:blur(3px);pointer-events:none;transition:opacity 1s}
+.oshadow.gone{opacity:0}
+.orb{position:absolute;width:66px;height:66px;margin:-33px 0 0 -33px;border-radius:50%;border:2px solid rgba(255,252,240,.9);padding:0;cursor:pointer;background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.8) 0%,rgba(255,246,227,.42) 28%,rgba(242,196,120,.3) 62%,rgba(242,185,107,.16) 100%);box-shadow:0 0 0 1px rgba(26,16,34,.55),0 0 22px rgba(255,214,140,.6),inset 0 -6px 14px rgba(26,16,34,.14);backdrop-filter:blur(1.5px);animation:drift 7s ease-in-out infinite alternate;transition:opacity 1.2s ease,transform .5s ease}
+.orb::after{content:"";position:absolute;inset:-10px;border-radius:50%;border:1px solid rgba(255,246,227,.35);animation:ring 3.2s ease-out infinite}
+.orb.mirage{background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.8) 0%,rgba(255,226,236,.45) 28%,rgba(242,150,190,.34) 62%,rgba(242,150,190,.16) 100%);border-color:rgba(255,214,232,.95);box-shadow:0 0 0 1px rgba(90,24,64,.5),0 0 22px rgba(255,150,200,.6);filter:url(#heat)}
+.orb:hover,.orb:focus-visible{transform:scale(1.25)}
+.orb svg{display:block;width:100%;height:100%;pointer-events:none;overflow:visible}
+.orb.gone{opacity:0;pointer-events:none;transform:scale(.4)}
+@keyframes drift{from{translate:-10px 4px}to{translate:12px -14px}}
+@keyframes ring{from{transform:scale(.7);opacity:.9}to{transform:scale(1.5);opacity:0}}
+.ghost{stroke:#ffd3d9;opacity:.55;animation:ghost 2.6s ease forwards}
+@keyframes ghost{to{opacity:0}}
+#flowers{opacity:0;transform:scale(.3);transform-box:fill-box;transform-origin:center bottom;transition:opacity 1.6s ease,transform 1.6s cubic-bezier(.2,.8,.2,1)}
+#flowers.on{opacity:1;transform:scale(1)}
+.caption{position:absolute;left:0;right:0;top:16px;text-align:center;font-family:var(--serif);font-style:italic;font-size:1.35rem;color:var(--bloom);text-shadow:0 2px 20px rgba(0,0,0,.5);min-height:2rem;pointer-events:none;transition:opacity .6s}
+.zh.es{font-family:inherit;font-size:.78em;opacity:.85;letter-spacing:0}
+.zh{display:block;font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;font-style:normal;font-weight:400;font-size:.82em;letter-spacing:.04em;opacity:.92;margin-top:2px}
+.demo-bar .zh,.demo-foot .zh,.demo-foot button .zh{display:inline;margin:0 0 0 .5em;font-size:.95em;text-transform:none;letter-spacing:.02em}
+.demo-bar .zh::before,.demo-foot .zh::before{content:"/ ";opacity:.5}
+.demo-bar>span{display:flex;flex-wrap:wrap;gap:0 .2em;align-items:baseline}
+.demo-foot{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(21,18,43,.55);font-size:.85rem}
+.demo-foot button{font:inherit;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--bloom);background:transparent;border:1px solid rgba(255,246,227,.4);border-radius:99px;padding:5px 12px;cursor:pointer}
+.tell{font-size:.85rem;opacity:.85;margin-top:.8rem}
+
+/* 02 research */
+.case{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:start}
+@media(max-width:900px){.case{grid-template-columns:1fr}}
+.credits{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--paper)}
+.credits dl{margin:0;display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:.93rem}
+.credits dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding-top:3px}
+.credits dd{margin:0}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:2rem 0}
+@media(max-width:700px){.shots{grid-template-columns:1fr}}
+.shot{margin:0;position:relative}
+.shot img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;display:block;background:var(--sand2)}
+.shot .ph{display:none;aspect-ratio:4/3;border-radius:14px;border:1.5px dashed var(--mute);align-items:center;justify-content:center;text-align:center;padding:16px;font-family:var(--mono);font-size:.72rem;color:var(--mute)}
+.shot.missing img{display:none}.shot.missing .ph{display:flex}
+.shot figcaption{font-size:.82rem;color:var(--mute);margin-top:6px}
+.moments{counter-reset:m}
+.moment{position:relative;padding-top:50px}
+.moment::before{counter-increment:m;content:"0" counter(m);position:absolute;top:14px;left:22px;font-family:var(--serif);font-style:italic;font-size:2rem;opacity:.35}
+.moment dl{margin:0;font-size:.93rem}
+.moment dt{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-top:.7em}
+.moment dd{margin:0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;background:var(--paper);border-radius:14px;overflow:hidden}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;background:var(--sand2);color:var(--ink)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.refs .card{display:flex;flex-direction:column;gap:2px}
+.refs .card p{margin:.25rem 0}
+.refs a.src{font-size:.85rem}
+.refs .teach{margin-top:auto;padding-top:.7rem;border-top:1px dashed var(--line);font-size:.9rem}
+.defn{border-left:3px solid var(--ink);padding-left:16px;margin:2rem 0}
+
+/* 03 insight */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:2.4rem;counter-reset:s}
+@media(max-width:700px){.steps{grid-template-columns:1fr 1fr}}
+.steps div{padding:12px 14px;border-top:3px solid var(--ink);font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.steps div::before{counter-increment:s;content:"0" counter(s) " / ";opacity:.5}
+.ok{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.ok li{padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:.93rem}
+.ok li b{font-weight:600}
+.gap{border-top:4px solid var(--ember)}
+.chat{display:grid;gap:12px;max-width:820px}
+.msg{padding:14px 18px;border-radius:18px;max-width:88%;font-size:.95rem}
+.msg .who{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.65;display:block;margin-bottom:3px}
+.msg.you{background:var(--ink);color:var(--bloom);justify-self:end;border-bottom-right-radius:4px}
+.msg.ai{background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px}
+.decision{background:var(--ink);color:var(--bloom);border-radius:22px;padding:clamp(24px,4vw,44px);margin-top:2.4rem}
+.decision h3{color:var(--sun)}
+.decision .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:800px){.decision .cols{grid-template-columns:1fr}}
+
+/* 04 narrative */
+.arc{display:flex;flex-wrap:wrap;gap:0;margin:2.4rem 0;border-top:1px solid rgba(255,246,227,.3)}
+.arc div{flex:1 1 150px;padding:14px 12px 0 0;font-family:var(--serif);font-style:italic;font-size:1.5rem}
+.arc small{display:block;font-family:var(--sans);font-style:normal;font-size:.85rem;opacity:.75;margin-top:4px}
+.layers .card h4{color:var(--sun)}
+.facts-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:2.4rem}
+@media(max-width:900px){.facts-strip{grid-template-columns:1fr 1fr}}
+.facts-strip div{border-top:1px solid rgba(255,246,227,.3);padding-top:10px;font-size:.92rem}
+.facts-strip b{display:block;font-family:var(--serif);font-size:1.7rem;font-weight:400;color:var(--sun);line-height:1.1}
+.alt{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:2.4rem}
+@media(max-width:800px){.alt{grid-template-columns:1fr}}
+.alt .card.pick{border-color:var(--sun)}
+
+/* 05 journey */
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;overflow-x:auto}
+.fig svg{min-width:860px;width:100%;height:auto;display:block}
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:2.4rem}
+@media(max-width:1000px){.stages{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.stages{grid-template-columns:1fr}}
+.stages .card{padding:16px}
+.stages .card .tag{margin-bottom:8px}
+.board{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1000px){.board{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.board{grid-template-columns:1fr}}
+.frame{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.frame .t{padding:12px 14px 14px;font-size:.84rem}
+.frame h4{font-size:.98rem;margin-bottom:.3rem}
+.frame dl{margin:0;display:grid;grid-template-columns:62px 1fr;gap:3px 8px}
+.frame dt{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding-top:2px}
+.frame dd{margin:0}
+
+.plate{margin:0;background:#fffdf7;padding:10px;border-radius:6px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.plate img{display:block;width:100%;height:auto;border-radius:2px}
+.plate figcaption{padding:10px 4px 2px;font-size:.84rem;color:var(--ink)}
+.plate figcaption b{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--mute)}
+.banner{margin:0 0 3rem}
+.gallery{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;align-items:start}
+.gallery .plate:nth-child(1){grid-column:span 3}.gallery .plate:nth-child(2){grid-column:span 3}
+.gallery .plate:nth-child(3){grid-column:span 2}.gallery .plate:nth-child(4){grid-column:span 2}.gallery .plate:nth-child(5){grid-column:span 2}
+@media(max-width:800px){.gallery{grid-template-columns:1fr}.gallery .plate{grid-column:auto!important}}
+.motifs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:2rem}
+@media(max-width:900px){.motifs{grid-template-columns:1fr 1fr}}
+.motifs div{border-top:1px solid rgba(255,246,227,.3);padding-top:10px;font-size:.9rem}
+.motifs b{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sun);margin-bottom:3px}
+.frame a{display:block}
+.frame img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#fffdf7}
+.scenes{display:grid;gap:34px;margin-top:1.4rem}
+.scene{display:grid;grid-template-columns:1.8fr 1fr;gap:28px;align-items:center}
+.scene:nth-child(even){grid-template-columns:1fr 1.8fr}.scene:nth-child(even) .plate{order:2}
+@media(max-width:900px){.scene,.scene:nth-child(even){grid-template-columns:1fr}.scene:nth-child(even) .plate{order:0}}
+.scene .plate{background:#fffdf7;padding:8px}
+.scene h4{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin:.2rem 0 .5rem}
+.scene p{margin:0 0 .7em;font-size:.95rem}
+.critters{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1.2rem}
+@media(max-width:900px){.critters{grid-template-columns:1fr}}
+.critter{background:#fffdf7;border-radius:14px;padding:14px;text-align:left}
+.critter svg{width:64px;height:64px;display:block;margin-bottom:6px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff6e3 0%,#f2cf95 55%,#d9b36a 100%)}
+.critter h4{margin:.1rem 0 .3rem;font-family:var(--serif);font-size:1.15rem;font-weight:500;color:var(--ink)}
+.critter p{margin:0;font-size:.85rem;color:var(--ink);opacity:.85}
+.mocktag{display:inline-block;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:#ffe34d;color:#1b1630;margin-bottom:6px}
+.drawtag{display:inline-block;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:var(--sand2);color:var(--ink);margin-bottom:6px}
+/* 06 style */
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+@media(max-width:800px){.swatches{grid-template-columns:repeat(3,1fr)}}
+.sw{border-radius:12px;overflow:hidden;border:1px solid rgba(255,246,227,.2);font-size:.78rem}
+.sw i{display:block;height:84px}
+.sw span{display:block;padding:8px 10px;background:rgba(255,246,227,.07)}
+.sw b{display:block;font-family:var(--mono);font-weight:500;font-size:.7rem}
+.specimen{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;margin:0}
+.specimen em{color:var(--sun);font-weight:300}
+.layer{display:grid;grid-template-columns:150px 1fr;gap:6px 18px;padding:14px 0;border-top:1px solid rgba(255,246,227,.22)}
+.layer b{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sun)}
+@media(max-width:640px){.layer{grid-template-columns:1fr}}
+.dark table,.dusk table{background:rgba(255,246,227,.06);color:var(--bloom)}
+.dark th,.dusk th{background:rgba(255,246,227,.12);color:var(--bloom)}
+.dark td,.dark th,.dusk td,.dusk th{border-color:rgba(255,246,227,.18)}
+.dark .tablewrap,.dusk .tablewrap{border-color:rgba(255,246,227,.2)}
+.dark a,.dusk a{color:var(--sun)}
+
+/* 07 plan */
+.weeks{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:800px){.weeks{grid-template-columns:1fr}}
+.week{border-radius:20px;padding:28px;background:var(--paper);border:1px solid var(--line)}
+.week.b{background:var(--ink);color:var(--bloom)}
+.week h3{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.week h3 span{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.65}
+.week ol{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.week li{display:grid;grid-template-columns:64px 1fr;gap:10px;font-size:.95rem}
+.week li b{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;opacity:.6;padding-top:3px}
+.done{margin-top:2rem;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:800px){.done{grid-template-columns:1fr}}
+footer{background:var(--night);color:var(--bloom);padding:56px 0;font-size:.9rem}
+footer a{color:var(--sun)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:20px 50px;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<!-- shared SVG filter: heat shimmer (mirage) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="heat" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence id="heatTurb" type="fractalNoise" baseFrequency="0.012 0.07" numOctaves="2" seed="4" result="n">
+      <animate id="heatAnim" attributeName="baseFrequency" dur="9s" values="0.012 0.07;0.016 0.09;0.012 0.07" repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<nav class="top" aria-label="Proposal sections">
+  <a class="brand" href="#top">Mirage Bloom</a>
+  <ul>
+    <li><a href="#s1" data-n="s1">01 Game</a></li>
+    <li><a href="#s2" data-n="s2">02 Research</a></li>
+    <li><a href="#s3" data-n="s3">03 Insight</a></li>
+    <li><a href="#s4" data-n="s4">04 Narrative</a></li>
+    <li><a href="#s5" data-n="s5">05 Journey</a></li>
+    <li><a href="#s6" data-n="s6">06 Style + Sound</a></li>
+    <li><a href="#s7" data-n="s7">07 Plan</a></li>
+  </ul>
+  <a class="back" href="index.html">← Portfolio</a>
+  <button class="sound" id="soundBtn" aria-pressed="false" title="Sound is off by default. Turn it on to hear the prototype.">♪ Sound off</button>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <svg class="hero-art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#14224f"/><stop offset=".38" stop-color="#34417f"/>
+        <stop offset=".66" stop-color="#c25a7c"/><stop offset=".86" stop-color="#f2a070"/><stop offset="1" stop-color="#f7c58f"/>
+      </linearGradient>
+      <radialGradient id="sunGlow" cx=".5" cy=".5" r=".5">
+        <stop offset="0" stop-color="#fff0c9" stop-opacity="1"/><stop offset=".35" stop-color="#f2b96b" stop-opacity=".75"/>
+        <stop offset="1" stop-color="#f2b96b" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#b9774f"/><stop offset=".5" stop-color="#7a4a3c"/><stop offset="1" stop-color="#2a1a2e"/>
+      </linearGradient>
+      <radialGradient id="horbG" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#fff6e3" stop-opacity=".95"/><stop offset=".55" stop-color="#f2cf95" stop-opacity=".6"/><stop offset="1" stop-color="#d9b36a" stop-opacity=".7"/></radialGradient>
+      <filter id="hblur"><feGaussianBlur stdDeviation="14"/></filter>
+    </defs>
+    <rect width="1600" height="900" fill="url(#sky)"/>
+    <g id="stars" fill="#fff6e3"></g>
+    <circle cx="940" cy="640" r="330" fill="url(#sunGlow)"/>
+    <ellipse cx="1100" cy="250" rx="420" ry="26" fill="#fff" opacity=".16" filter="url(#hblur)"/>
+    <ellipse cx="380" cy="360" rx="320" ry="20" fill="#ffd7b0" opacity=".2" filter="url(#hblur)"/>
+    <g filter="url(#heat)">
+      <circle cx="940" cy="660" r="70" fill="#ffe9b8"/>
+      <path d="M0 700 V640 H70 L90 600 H230 L250 640 H360 L380 700Z M520 700 L540 626 H700 L720 660 H820 L836 700Z M1050 700 L1070 630 H1250 L1274 668 H1380 L1396 700Z M1500 700 V650 L1520 612 H1600 V700Z" fill="#7a5a96" opacity=".8"/>
+    </g>
+    <path d="M0 700 Q400 690 800 702 T1600 696 V900 H0Z" fill="url(#ground)"/>
+    <g stroke="#5a3226" stroke-width="2" fill="none" opacity=".35"><path d="M80 760Q300 748 520 764"/><path d="M700 800Q940 788 1200 804"/><path d="M1100 740Q1300 732 1520 746"/></g>
+    <g id="heroCacti"></g>
+    <g id="heroBob"><g transform="translate(1040,838) scale(1.5,1.5)"><g transform="matrix(1,0,-0.60,-0.36,0,0) translate(0,-24)" opacity=".85"><polygon points="-34,-18 -4,-26 -1,-4 -30,2" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-4,-26 30,-21 28,0 -1,-4" fill="#5a3366" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-30,2 -1,-4 2,6 -26,8" fill="#8a4a3a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="24,-2 38,-5 42,24 30,24" fill="#3d4a7a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-36,2 -24,4 -22,24 -33,24" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-12,0 -2,-3 1,24 -9,24" fill="#5a3366" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="14,0 24,-2 27,24 18,24" fill="#8a4a3a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="30,-21 44,-30 48,-17 32,-9" fill="#3d4a7a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-56,-36 -36,-32 -33,-8 -52,-3" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-36,-32 -27,-28 -26,-6 -33,-8" fill="#5a3366" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-56,-36 -53,-54 -44,-38" fill="#8a4a3a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-44,-38 -37,-55 -32,-33" fill="#3d4a7a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-53,-54 -57,-62 -50,-57" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/></g></g><g transform="translate(1040,838) scale(1.5,1.5) translate(0,-24)"><polygon points="-34,-18 -4,-26 -1,-4 -30,2" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-4,-26 30,-21 28,0 -1,-4" fill="url(#dscore)" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-30,2 -1,-4 2,6 -26,8" fill="#efe2c0" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="24,-2 38,-5 42,24 30,24" fill="#b5593b" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-36,2 -24,4 -22,24 -33,24" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-12,0 -2,-3 1,24 -9,24" fill="#3a2a22" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="14,0 24,-2 27,24 18,24" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="30,-21 44,-30 48,-17 32,-9" fill="#3a2a22" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-56,-36 -36,-32 -33,-8 -52,-3" fill="#d9b36a" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-36,-32 -27,-28 -26,-6 -33,-8" fill="#7d93a8" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-56,-36 -53,-54 -44,-38" fill="#b5593b" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-44,-38 -37,-55 -32,-33" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-53,-54 -57,-62 -50,-57" fill="#3a2a22" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><g stroke="#1a1022" stroke-linejoin="round" stroke-linecap="round" fill="none"><path d="M-52,-26 Q-46,-33 -40,-26 Q-46,-21 -52,-26Z" fill="#fff6e3" stroke-width="1.8"/><circle cx="-46" cy="-26" r="2.1" fill="#1a1022"/><path d="M-35,-26 L-28,-24 L-35,-19Z" fill="#fff6e3" stroke-width="1.6"/><circle cx="-31" cy="-23" r="1.1" fill="#1a1022"/><path d="M-56,-12 L-50,-6 L-54,-4Z" fill="#6a3a2a" stroke-width="1.6"/><path d="M-52,-3 L-40,-6" stroke-width="1.6"/><path d="M-20,-22 l4,6 M-12,-24 l3,6 M-4,-22 l3,6 M6,-20 l3,6 M16,-18 l3,6" stroke-width="1.4"/></g></g></g>
+    <g id="heroOrbs"></g>
+  </svg>
+  <div class="wrap">
+    <span class="kicker">AI for Design · Week 01 · Research &amp; Pitch</span>
+    <h1>Mirage <em>Bloom</em></h1>
+    <p class="sub">A slow, sound-grown saguaro game about hearing what is real — and what only sounds like it is.</p>
+    <div class="btns">
+      <a class="btn fill" href="#s1">Start the pitch ↓</a>
+      <a class="btn" href="#demo">Try the core loop ▸</a>
+    </div>
+  </div>
+  <div class="meta">Theme: Hallucination<br>Browser · idle · relaxing</div>
+</header>
+
+<!-- 01 GAME -->
+<section class="sec dark" id="s1">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="num">01</span>
+        <span class="kicker">The game</span>
+        <h2>A cactus that grows on what you hear.</h2>
+        <p class="lede">You are a quiet listener at the edge of a desert. A saguaro seed sleeps in the sand. Sounds drift by as glowing bubbles, each holding a musical note and a small desert creature: a woodpecker, a hawk or a tiny owl in its nest hole. Listen, then collect. The saguaro drinks them and grows.</p>
+        <p>But the desert hallucinates. Some sounds come from nowhere: heat-haze echoes that only <em>sound</em> real. Collect one and it dissolves, leaving a ghost arm that fades. Nothing is lost — you just learn to listen more carefully.</p>
+        <dl class="facts">
+          <div><dt>Working title</dt><dd>Mirage Bloom</dd></div>
+          <div><dt>Genre</dt><dd>Idle · relaxing · listening game</dd></div>
+          <div><dt>Main interaction</dt><dd>Hover to listen, click to collect</dd></div>
+          <div><dt>Length</dt><dd>3 short stages, about 6 minutes</dd></div>
+          <div><dt>Platform</dt><dd>Any modern browser, sound optional</dd></div>
+          <div><dt>Feeling</dt><dd>Calm, attentive, quietly proud</dd></div>
+        </dl>
+      </div>
+
+      <div class="reveal" id="demo">
+        <div class="demo">
+          <div class="demo-bar"><span id="stageName">Dawn · seed<span class="zh">黎明 · 种子</span><span class="zh es">Amanecer · semilla</span></span><span id="count">Kept 0 · Dissolved 0<span class="zh">已收藏 0 · 已消散 0</span><span class="zh es">Guardados 0 · Disueltos 0</span></span></div>
+          <div id="stage">
+            <div class="caption" id="cap" aria-live="polite">Turn sound on, then hover an orb to listen.<span class="zh">请先开启声音，然后将鼠标移到气泡上聆听。</span><span class="zh es">Activa el sonido y pasa el cursor sobre una burbuja para escuchar.</span></div>
+            <svg id="dsag" viewBox="0 0 440 460" preserveAspectRatio="xMidYMax slice" aria-label="A cubist saguaro cactus that grows as sounds are collected, on a surreal desert plain" role="img">
+              <defs>
+                <radialGradient id="dsun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6d0"/><stop offset=".3" stop-color="#ffd58a" stop-opacity=".8"/><stop offset="1" stop-color="#ffb070" stop-opacity="0"/></radialGradient>
+                <linearGradient id="dplain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0a574"/><stop offset=".5" stop-color="#b9774f"/><stop offset="1" stop-color="#6e4030"/></linearGradient>
+                <linearGradient id="dear" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#efc5a3"/><stop offset="1" stop-color="#c98a63"/></linearGradient>
+                <pattern id="dscore" width="26" height="18" patternUnits="userSpaceOnUse"><rect width="26" height="18" fill="#efe2c0"/><path d="M0 4H26M0 8H26M0 12H26" stroke="#1a1022" stroke-width=".8" opacity=".6"/><ellipse cx="9" cy="10" rx="3.4" ry="2.4" fill="#1a1022" transform="rotate(-20 9 10)"/><path d="M12 9V1" stroke="#1a1022" stroke-width="1"/></pattern>
+                <pattern id="dwood" width="30" height="12" patternUnits="userSpaceOnUse"><rect width="30" height="12" fill="#c99a62"/><path d="M0 3Q8 1 15 3T30 3M0 8Q9 6 16 8T30 8" stroke="#7a4a26" stroke-width="1.2" fill="none" opacity=".7"/></pattern>
+                <filter id="dblur"><feGaussianBlur stdDeviation="6"/></filter>
+              </defs>
+              <circle cx="110" cy="338" r="190" fill="url(#dsun)"/>
+              <ellipse cx="300" cy="150" rx="200" ry="14" fill="#fff" opacity=".22" filter="url(#dblur)"/>
+              <g filter="url(#heat)">
+                <path d="M0 340 L0 312 L30 312 L40 300 L90 300 L100 316 L150 316 L160 336Z M200 336 L210 304 L270 304 L282 330 L330 330 L340 310 L400 310 L410 336Z M395 336 L405 318 L440 318 V336Z" fill="#8a6fa0" opacity=".75"/>
+              </g>
+              <path d="M0 330 Q120 322 220 332 T440 328 V460 H0Z" fill="url(#dplain)"/>
+              <g stroke="#7a4a30" stroke-width="1.2" fill="none" opacity=".4"><path d="M20 372Q90 366 170 374"/><path d="M230 392Q300 384 400 394"/><path d="M60 430Q150 422 230 432"/><path d="M280 350Q340 346 410 352"/></g>
+              <g transform="translate(70 452)"><ellipse cx="6" cy="6" rx="82" ry="12" fill="#2a1534" opacity=".28" filter="url(#dblur)"/>
+                <path d="M-60 6 C-70 -60 -30 -92 12 -88 C60 -84 78 -40 62 6Z" fill="url(#dear)" stroke="#8a5a3c" stroke-width="3"/>
+                <path d="M-36 4 C-44 -40 -16 -66 12 -62 C42 -58 52 -30 44 4" fill="none" stroke="#b07a55" stroke-width="5" stroke-linecap="round"/>
+                <path d="M-8 6 C-14 -22 0 -36 14 -34" fill="none" stroke="#7a4a30" stroke-width="3" stroke-linecap="round"/>
+                <path d="M-100 12 Q-30 -4 40 4 T120 10 V30 H-100Z" fill="#8a5538"/></g>
+              <g><g transform="translate(372,424) scale(0.95,0.95)"><g transform="matrix(1,0,-0.60,-0.36,0,0) translate(0,-24)" opacity=".85"><polygon points="-34,-18 -4,-26 -1,-4 -30,2" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-4,-26 30,-21 28,0 -1,-4" fill="#5a3366" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-30,2 -1,-4 2,6 -26,8" fill="#8a4a3a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="24,-2 38,-5 42,24 30,24" fill="#3d4a7a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-36,2 -24,4 -22,24 -33,24" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-12,0 -2,-3 1,24 -9,24" fill="#5a3366" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="14,0 24,-2 27,24 18,24" fill="#8a4a3a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="30,-21 44,-30 48,-17 32,-9" fill="#3d4a7a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-56,-36 -36,-32 -33,-8 -52,-3" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-36,-32 -27,-28 -26,-6 -33,-8" fill="#5a3366" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-56,-36 -53,-54 -44,-38" fill="#8a4a3a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-44,-38 -37,-55 -32,-33" fill="#3d4a7a" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/><polygon points="-53,-54 -57,-62 -50,-57" fill="#2b1a40" stroke="#1a1022" stroke-width="1.6" stroke-linejoin="round"/></g></g><g transform="translate(372,424) scale(0.95,0.95) translate(0,-24)"><polygon points="-34,-18 -4,-26 -1,-4 -30,2" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-4,-26 30,-21 28,0 -1,-4" fill="url(#dscore)" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-30,2 -1,-4 2,6 -26,8" fill="#efe2c0" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="24,-2 38,-5 42,24 30,24" fill="#b5593b" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-36,2 -24,4 -22,24 -33,24" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-12,0 -2,-3 1,24 -9,24" fill="#3a2a22" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="14,0 24,-2 27,24 18,24" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="30,-21 44,-30 48,-17 32,-9" fill="#3a2a22" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-56,-36 -36,-32 -33,-8 -52,-3" fill="#d9b36a" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-36,-32 -27,-28 -26,-6 -33,-8" fill="#7d93a8" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-56,-36 -53,-54 -44,-38" fill="#b5593b" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-44,-38 -37,-55 -32,-33" fill="#c99a62" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><polygon points="-53,-54 -57,-62 -50,-57" fill="#3a2a22" stroke="#1a1022" stroke-width="1.8" stroke-linejoin="round"/><g stroke="#1a1022" stroke-linejoin="round" stroke-linecap="round" fill="none"><path d="M-52,-26 Q-46,-33 -40,-26 Q-46,-21 -52,-26Z" fill="#fff6e3" stroke-width="1.8"/><circle cx="-46" cy="-26" r="2.1" fill="#1a1022"/><path d="M-35,-26 L-28,-24 L-35,-19Z" fill="#fff6e3" stroke-width="1.6"/><circle cx="-31" cy="-23" r="1.1" fill="#1a1022"/><path d="M-56,-12 L-50,-6 L-54,-4Z" fill="#6a3a2a" stroke-width="1.6"/><path d="M-52,-3 L-40,-6" stroke-width="1.6"/><path d="M-20,-22 l4,6 M-12,-24 l3,6 M-4,-22 l3,6 M6,-20 l3,6 M16,-18 l3,6" stroke-width="1.4"/></g></g></g>
+              <g transform="translate(250 398)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <g id="dShadow" transform="matrix(1,0,-.65,-.36,0,0)" opacity=".85"></g>
+                <path id="dLeft" opacity="0" stroke-width="12"/>
+                <path id="dRight" opacity="0" stroke-width="12"/>
+                <path id="dTrunk" d="M0 0 V-24" stroke-width="10"/>
+                <g id="dCube"></g>
+                <g id="dGhosts"></g>
+                <g id="flowers" stroke="none"></g>
+              </g>
+            </svg>
+          </div>
+          <div class="demo-foot">
+            <span>Mirages shimmer at the edges and sound a little <em>too clean</em>.<span class="zh">幻影的边缘会闪烁，听起来有点“太干净”。</span><span class="zh es">Los espejismos titilan en los bordes y suenan un poco demasiado limpios.</span></span>
+            <button type="button" id="resetBtn">Plant again<span class="zh">重新种下</span><span class="zh es">Plantar de nuevo</span></button>
+          </div>
+        </div>
+        <p class="tell mute">Prototype of the core loop only — final pacing, art and sound come in Week 2. While you are away, the real game keeps the saguaro drinking slowly (idle growth).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 RESEARCH -->
+<section class="sec light" id="s2">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="num">02</span>
+      <span class="kicker">Research · case study</span>
+      <h2>Playing Ducklings, and finding who made it.</h2>
+      <p class="lede">I chose one browser game I could actually play, then separated what the creators say, what I observed, and what I think it means.</p>
+    </div>
+
+    <div class="case reveal">
+      <div>
+        <h3>Why Ducklings caught my attention</h3>
+        <p>The illustration and music felt relaxing, and the loop is a small idle-style growth cycle: rescue ducklings, bring them home, upgrade the nest. That is close to what I want — a thing that grows because of what the player gathers. But I felt a little dizzy while playing because the duck and camera move around too fast.</p>
+        <h3 style="margin-top:1.6rem">What I want to learn</h3>
+        <p>How a “collect and grow” loop stays calm, and which choices (music, camera speed, threat) make a relaxing game stop being relaxing.</p>
+        <div class="legend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:1.4rem">
+          <span class="ev c">Creator statement</span><span class="ev o">My observation</span><span class="ev i">My interpretation</span>
+          <span class="small mute" style="flex-basis:100%">Labels used throughout this page.</span>
+        </div>
+      </div>
+      <div class="credits">
+        <h4>Creator credits &amp; source links</h4>
+        <dl>
+          <dt>Game</dt><dd>Ducklings (2019)</dd>
+          <dt>Developers</dt><dd>Jesper van den Ende &amp; Jurgen Hoogeboom — Pelican Party Studios, Rotterdam <span class="ev c">Creator statement</span> · <a href="https://pelicanparty.co/">studio page</a></dd>
+          <dt>Play</dt><dd><a href="https://pelicanparty.itch.io/ducklings">itch.io page</a> · <a href="https://ducklings.io/">ducklings.io</a></dd>
+          <dt>Also on</dt><dd>App Store, Google Play (linked from the itch page)</dd>
+          <dt>Dev notes</dt><dd><a href="https://pelicanparty.itch.io/ducklings/devlog/263310/co-op-and-hats">“Co-op and Hats” devlog</a>, 13 June 2021</dd>
+          <dt>Music</dt><dd>Released by the studio as the album “Ducklings” (one 10:36 track, 20 Sept 2019), described as calm background music. <a href="https://pelicanpartystudios.bandcamp.com/album/ducklings">Bandcamp</a>. No individual composer is named there.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="shots reveal">
+      <figure class="shot"><img src="assets/mirage-bloom/ducklings-1.jpg" alt="Ducklings screenshot 1" loading="lazy" onerror="this.parentElement.classList.add('missing')"><div class="ph">Screenshot not found</div><figcaption>Moment 1 · the first swim: lone duck, lily pads, cattails</figcaption></figure>
+      <figure class="shot"><img src="assets/mirage-bloom/ducklings-2.jpg" alt="Ducklings screenshot 2" loading="lazy" onerror="this.parentElement.classList.add('missing')"><div class="ph">Screenshot not found</div><figcaption>Moment 2 · ducklings trail behind the duck</figcaption></figure>
+      <figure class="shot"><img src="assets/mirage-bloom/ducklings-3.jpg" alt="Ducklings screenshot 3" loading="lazy" onerror="this.parentElement.classList.add('missing')"><div class="ph">Screenshot not found</div><figcaption>Moment 3 · the nest: hearts, a hat counter, closer camera</figcaption></figure>
+    </div>
+
+    <h3 class="reveal">Three meaningful moments</h3>
+    <div class="grid g3 moments reveal" style="margin-bottom:3rem">
+      <article class="card moment"><h4>The first swim</h4><dl>
+        <dt>I saw / heard</dt><dd>A flat, bright blue pond seen from above: low-poly lily pads, cattails, one white duck leaving a white ripple. A counter (14/16) top left, a pause button top right, a red boat entering at the edge.</dd>
+        <dt>I did</dt><dd>Steered the duck with the cursor.</dd>
+        <dt>What changed</dt><dd>A nest icon with a blue arrow sat at the screen edge, pointing home. The scene moved fast and I felt a little dizzy.</dd>
+        <dt>I understood</dt><dd>The interface is almost empty, so the world and one arrow do the guiding. Pace matters as much as the art.</dd></dl></article>
+      <article class="card moment"><h4>Ducklings follow</h4><dl>
+        <dt>I saw / heard</dt><dd>A line of tiny yellow ducklings strung behind the duck, with a splashing wake. More lone ducklings float near the reeds.</dd>
+        <dt>I did</dt><dd>Swam into lost ducklings.</dd>
+        <dt>What changed</dt><dd>Each one joined the trail.</dd>
+        <dt>I understood</dt><dd>Progress is visible in the world, not in a menu: you literally carry what you collected.</dd></dl></article>
+      <article class="card moment"><h4>The nest</h4><dl>
+        <dt>I saw / heard</dt><dd>A close, warm view of a leafy nest with a white duck, three red hearts, and a new hat counter (2) under the 24/25 count.</dd>
+        <dt>I did</dt><dd>Brought the ducklings home.</dd>
+        <dt>What changed</dt><dd>The camera moved in, the count rose from 14/16 to 24/25, and a reward counter appeared.</dd>
+        <dt>I understood</dt><dd>Returning home pays off with affection and decoration. I read the counts as ducklings gathered against a target, but that is my interpretation. <span class="ev i">Interpretation</span></dd></dl></article>
+    </div>
+    </div>
+
+    <h3 class="reveal">Five player-action events</h3>
+    <div class="tablewrap reveal" style="margin-bottom:3rem">
+      <table>
+        <thead><tr><th>#</th><th>Player action</th><th>Game response</th><th>Player understanding</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Moves the cursor</td><td>The duck swims toward it, leaving a white wake; the camera follows. A nest arrow points home</td><td>The cursor steers; movement is the main verb</td><td><span class="ev o">Observation</span></td></tr>
+          <tr><td>2</td><td>Swims into a lone duckling</td><td>It joins a line behind the duck</td><td>Rescuing = collecting</td><td><span class="ev c">Creator</span> <span class="ev o">Obs.</span></td></tr>
+          <tr><td>3</td><td>Brings ducklings back to the nest</td><td>Camera moves in; hearts appear; counts rise and a hat counter shows</td><td>Progress is spent on a permanent, decorated home</td><td><span class="ev c">Creator</span> <span class="ev o">Obs.</span></td></tr>
+          <tr><td>4</td><td>Drifts near a boat</td><td>The duck gets hurt and the game ends: game over (red boats appear at the screen edge)</td><td>Boats are the threat; the pond is not purely safe</td><td><span class="ev c">Creator</span> <span class="ev o">Obs.</span></td></tr>
+          <tr><td>5</td><td>Meets another duck with ducklings</td><td>Ducklings can be taken by other ducks (it happened in my play; other players report it too)</td><td>The pond is shared and competitive</td><td><span class="ev o">Observation</span> <span class="ev i">Interpretation</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="head reveal" style="margin-bottom:1.6rem">
+      <h3>The reference library I researched</h3>
+      <p class="mute">Each credited to its creators, linked to its source, with what it teaches me. Ducklings is the main case study; the others shape the concept.</p>
+    </div>
+    <div class="grid g3 refs reveal">
+      <article class="card"><span class="tag">Browser · visual novel</span><h4>Letting Go</h4>
+        <p class="small">little-moon-games · made with Godot · tagged cozy, relaxing</p>
+        <p class="small">Sort a childhood bedroom and choose what to keep. In the author’s replies, she says it grew out of her own struggle with keeping things, and that she might revisit it with more nuance.</p>
+        <a class="src" href="https://little-moon-games.itch.io/letting-go">itch.io page ↗</a>
+        <p class="teach"><b>Teaches me:</b> a constrained choice in a small space, easy operation, emotion through objects.</p></article>
+      <article class="card"><span class="tag">Browser · puzzle</span><h4>SNUG</h4>
+        <p class="small">cookiecrayon · made with Unity · prototype on itch, Steam release planned</p>
+        <p class="small">Pack oddly shaped objects into a bag with drag, rotate and a “jiggle”. Players praise the art and music; some asked for better text contrast.</p>
+        <a class="src" href="https://cookiecrayon.itch.io/snug">itch.io ↗</a> · <a class="src" href="https://store.steampowered.com/app/4017680">Steam ↗</a>
+        <p class="teach"><b>Teaches me:</b> a clear to-do list makes the layout easy; tactile physics feels good; check contrast. Its idea of bringing a recorder to collect sounds in nature inspired my orbs.</p></article>
+      <article class="card"><span class="tag">Download · platformer</span><h4>Saguaro (Aztec Game Lab)</h4>
+        <p class="small">A 2D exploration platformer and boss rush from Aztec Game Lab. Despite the name, you play a kangaroo rat challenged by the Coyote, a trickster god.</p>
+        <a class="src" href="https://aztec-game-lab.itch.io/saguaro">itch.io ↗</a>
+        <p class="teach"><b>Teaches me:</b> desert mythology as a world. Not chosen as my case study: it is a download, not a browser game, and not about the cactus. <span class="ev o">Careful: easy to confuse with my idea</span></p></article>
+      <article class="card"><span class="tag">Exploration · audio</span><h4>Proteus</h4>
+        <p class="small">Ed Key (design) &amp; David Kanaga (music), 2013</p>
+        <p class="small">A goal-less island you wander. Key described it as observation and exploration rather than objectives. Kanaga’s score gives visual elements their own sound.</p>
+        <a class="src" href="https://en.wikipedia.org/wiki/Proteus_(video_game)">Overview ↗</a> · <a class="src" href="https://www.gamedeveloper.com/audio/the-sound-and-music-of-proteus-an-academic-case-study">Sound study ↗</a> · <a class="src" href="https://shacknews.com/article/70798/indiecade-2011-proteus">Interview ↗</a>
+        <p class="teach"><b>Teaches me:</b> sound can be the interface; the world answers your presence.</p></article>
+      <article class="card"><span class="tag">Mobile · idle</span><h4>Penguin Isle</h4>
+        <p class="small">HABBY · arctic island habitats earn gold and hearts passively; soothing piano and waves</p>
+        <a class="src" href="https://apps.apple.com/app/id1474314811">App Store ↗</a>
+        <p class="teach"><b>Teaches me:</b> idle growth plus gentle ambience; a collection you tend slowly. The music is what I want to match in mood.</p></article>
+      <article class="card"><span class="tag">Mobile · idle</span><h4>Animal Restaurant</h4>
+        <p class="small">DH Games and 2Miles, 2019 · cat-staffed forest restaurant, tap-and-upgrade</p>
+        <a class="src" href="https://tvtropes.org/pmwiki/pmwiki.php/VideoGame/AnimalRestaurant">Overview ↗</a> · <a class="src" href="https://appquantum.com/news/june-2023/appquantum-deconstructs-animal-restaurant-how-to-earn-$2,000,000-in-iaps-with-a-cute-mobile-game.html">Design teardown ↗</a>
+        <p class="teach"><b>Teaches me:</b> more mission-driven and busy than Penguin Isle; story via customers. I take the warmth, not the pressure.</p></article>
+    </div>
+
+    <div class="defn reveal">
+      <h4>Idle game, defined</h4>
+      <p class="small" style="margin:0">Idle (incremental or clicker) games use simple actions like clicking or tapping to earn resources, which buy automated upgrades that keep generating resources passively. Mirage Bloom swaps resources for sounds and upgrades for slow growth.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 INSIGHT -->
+<section class="sec paper" id="s3">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="num">03</span>
+      <span class="kicker">Your insight · being critical with AI</span>
+      <h2>What the analysis missed.</h2>
+      <p class="lede">I used AI to research and analyse, then checked its claims against sources and my own play. The gaps changed my design.</p>
+    </div>
+    <div class="steps reveal"><div>Research</div><div>Find the gaps</div><div>Discuss</div><div>Decide</div></div>
+
+    <div class="grid g2 reveal" style="align-items:start">
+      <div>
+        <h3>Verified research</h3>
+        <ul class="ok">
+          <li><b>Ducklings</b> is developed by Jesper van den Ende and Jurgen Hoogeboom (Pelican Party Studios), 2019; swim, rescue ducklings, dodge boats, upgrade the nest. Its music is released by the studio on Bandcamp. <a href="https://pelicanparty.itch.io/ducklings">itch.io</a> · <a href="https://pelicanpartystudios.bandcamp.com/album/ducklings">Bandcamp</a></li>
+          <li><b>Proteus</b> was designed by Ed Key and David Kanaga (2013); Key frames it as exploration without objectives. <a href="https://shacknews.com/article/70798/indiecade-2011-proteus">Shacknews</a></li>
+          <li><b>Saguaros grow very slowly:</b> about 1–1.5 in the first eight years; flowers begin around 35 years; arms usually appear at 50–70 years, up to 100 in drier areas. <a href="https://www.nps.gov/sagu/learn/nature/how-saguaros-grow.htm">NPS</a> · <a href="https://www.nps.gov/articles/saguaro-cactus.htm">NPS</a></li>
+          <li><b>Saguaro flowers open at night</b> and close the next afternoon, in late April to early June. <a href="https://www.nps.gov/sagu/learn/nature/Saguaro.htm">NPS</a></li>
+          <li><b>Penguin Isle</b> is by HABBY; <b>Animal Restaurant</b> by DH Games &amp; 2Miles. <a href="https://apps.apple.com/app/id1474314811">App Store</a> · <a href="https://tvtropes.org/pmwiki/pmwiki.php/VideoGame/AnimalRestaurant">TV Tropes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Could not verify</h3>
+        <ul class="ok">
+          <li>Which person composed the <b>Ducklings</b> music. An AI summary said the two founders compose it, but neither the studio page nor the Bandcamp page says so, so I credit the studio only. The composer of <b>SNUG</b>’s music is also not credited on the pages I read.</li>
+          <li>Whether the other ducks in Ducklings are bots (a player says the developer mentioned a karma system) — second-hand, so I treat it as unconfirmed.</li>
+          <li>The procedural-animation video I saved (YouTube) — link not opened for this page; will check before citing.</li>
+        </ul>
+        <p class="small mute" style="margin-top:1rem">Sources were read directly where possible; claims only from search snippets are labelled above.</p>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="margin-top:3.4rem">Gaps I found in the analysis</h3>
+    <div class="grid g3 reveal">
+      <article class="card gap"><h4>1 · “Relaxing” hid the discomfort</h4><p class="small">The first-pass summary called Ducklings relaxing because of music, art and simple controls. It never mentioned the pace: I felt dizzy because the duck and camera move fast. No creator source discusses this, so it is my observation, not their intent. <span class="ev o">Observation</span></p></article>
+      <article class="card gap"><h4>2 · Threat inside a “chill” game</h4><p class="small">The summary skipped the stakes: boats hurt you and end the game, and other ducks steal ducklings. I saw both in my own play. The calm is real but sits next to tension and competition, which is what keeps the loop interesting. <span class="ev c">Creator</span> <span class="ev i">Interpretation</span></p></article>
+      <article class="card gap"><h4>3 · A hallucination risk of my own</h4><p class="small">My notes list “Saguaro” as a reference. An AI could blend the two: the cactus I want to grow and Aztec Game Lab’s kangaroo-rat boss rush are different things. Checking the source page caught it. Fitting for a game about hallucination.</p></article>
+    </div>
+
+    <h3 class="reveal" style="margin-top:3.4rem">A short, selected exchange</h3>
+    <div class="chat reveal">
+      <div class="msg you"><span class="who">Me</span>Why is Ducklings relaxing? Use the creator’s page.</div>
+      <div class="msg ai"><span class="who">AI · first pass</span>Soft music, cute illustration, simple cursor controls and no hard fail state make it relaxing.</div>
+      <div class="msg you"><span class="who">Me · new evidence</span>The page says boats hurt you, a boat hit meant game over in my play, ducks stole my ducklings, and I felt dizzy because everything moves fast. Reconsider.</div>
+      <div class="msg ai"><span class="who">AI · revised</span>Then the calm comes from tone and from a low-stakes loop, not from the absence of tension. Comfort also depends on pacing. The creator sources don’t address motion, so that is your observation and should be labelled that way. Two readings: threat is a gentle spice, or it undermines relaxation for some players.</div>
+      <div class="msg you"><span class="who">Me</span>So what does that mean for a sound-collecting saguaro?</div>
+      <div class="msg ai"><span class="who">AI</span>Keep a reason to pay attention without punishment. Replace damage with doubt, and slow the camera. Verify each claim as you build.</div>
+    </div>
+
+    <div class="decision reveal">
+      <h3>My conclusion and design decision</h3>
+      <div class="cols">
+        <div><h4>What I think matters most</h4><p>A relaxing game still needs a reason to look closely. Ducklings uses danger and rivals; I want to use <em>doubt</em>. The challenge becomes “is this sound real?”, never “did I get hurt?”.</p></div>
+        <div><h4>How it changes the game</h4><p>① The camera never moves fast: a fixed scene with slow drift. ② Mirages replace boats: they dissolve harmlessly. ③ Every claim on screen is either true to a source or clearly labelled as imagined.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 NARRATIVE -->
+<section class="sec dusk" id="s4">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="num" style="color:var(--bloom)">04</span>
+      <span class="kicker">Narrative &amp; concept</span>
+      <h2>Hallucination, heard.</h2>
+      <p class="lede">The desert is a place where light lies. A mirage is real light in the wrong place. I wanted the same for sound.</p>
+    </div>
+
+    <figure class="plate banner reveal"><img src="assets/mirage-bloom/mock-a-listen.jpg" alt="Surreal desert plain at dawn with a drooping cubist saguaro on a crutch, glass sound orbs, a giant ear and a hummingbird" loading="lazy"><figcaption><b>The world · scene mockup (Stage 1)</b>A wide, quiet plain with hazy light and long shadows. Glass sound orbs drift in; a seedling grows from a giant ear. AI-generated mockup, see section 05.</figcaption></figure>
+    <div class="grid g3 layers reveal">
+      <article class="card"><h4>1 · The mirage</h4><p class="small">Perception without a source. In the desert, heat bends light into water that isn’t there. In my game, heat bends sound into echoes that come from nowhere.</p></article>
+      <article class="card"><h4>2 · The confident fake</h4><p class="small">An AI hallucination is fluent, plausible, and unsupported. A mirage sound is the same: it sounds like a real wind, a real bird — until you listen carefully.</p></article>
+      <article class="card"><h4>3 · The listener</h4><p class="small">The player practises the skill this course asks for: checking whether something is really there before trusting it, kindly and without fear.</p></article>
+    </div>
+
+    <div class="arc reveal"><div>Arrive<small>Dusk, a seed in sand</small></div><div>Wonder<small>The first sound blooms</small></div><div>Doubt<small>Some echoes aren’t real</small></div><div>Change<small>You hear the difference</small></div><div>Leave<small>A night bloom, your sounds replayed</small></div></div>
+
+    <div class="grid g2 reveal">
+      <div>
+        <h3>The world</h3>
+        <p>A Sonoran-style desert from golden hour to night. One saguaro, one horizon, nothing else to chase. Sounds arrive from the scene itself, carried by animals that live around a saguaro: woodpeckers, raptors and small cavity-nesting birds. A bobcat passes by as scenery.</p>
+        <h3>The player’s role</h3>
+        <p>A keeper who listens. You don’t fight or race. You decide which sounds are worth keeping, and the cactus answers with a few gentle words (<em>“Breathe.” “Slow is still growing.”</em>) for a sense of wellbeing.</p>
+      </div>
+      <div>
+        <h3>The experience I want</h3>
+        <p>Quiet. Patient. Attentive. A player should finish with slower breathing, and with a small sense of having trained their ear. No score, no fail state, no timer.</p>
+        <h3>Optional extension</h3>
+        <p>Let the player upload or record a nature sound of their own and decide whether it is real or a mirage. I will test microphone input early in Week 2 because it is the riskiest feature.</p>
+      </div>
+    </div>
+
+    <div class="facts-strip reveal">
+      <div><b>1–1.5 in</b>a saguaro’s growth in its first eight years (NPS). Slow time fits an idle game.</div>
+      <div><b>~35 yrs</b>before first flowers (NPS). My game compresses this into minutes.</div>
+      <div><b>At night</b>flowers open after dark and close the next afternoon (NPS). My ending happens at night.</div>
+      <div><b>50–100 yrs</b>before arms appear (NPS). Arms are the milestone.</div>
+    </div>
+
+    <h3 class="reveal" style="margin-top:3.4rem">Two ideas I explored</h3>
+    <div class="alt reveal">
+      <article class="card pick"><span class="tag">Chosen</span><h4>Sound-grown saguaro</h4><p class="small">Collect sounds in the scene to raise a saguaro; optionally record or upload nature sounds. Idle, calm, and it can carry the theme of hallucination through hearing. One main interaction is simple to build and test.</p></article>
+      <article class="card"><span class="tag">Kept for later</span><h4>Percussion studio</h4><p class="small">Organise a rehearsal room: choose instruments, wrap cables, pick microphones and spaces for recording sessions in different conditions. It draws on my own music practice and on Letting Go and SNUG, but the theme link to hallucination was weaker.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 05 JOURNEY -->
+<section class="sec light" id="s5">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="num">05</span>
+      <span class="kicker">Interaction &amp; player journey</span>
+      <h2>An opening, three stages, an ending.</h2>
+      <p class="lede">Each stage changes what the player understands. One interaction throughout: <b>listen, then keep</b>.</p>
+    </div>
+
+    <div class="stages reveal">
+      <article class="card"><span class="tag">Opening</span><h4>The seed</h4><p class="small">Title in the dark, a prompt to wear headphones, sound optional. Wind starts. A seedling sits in the sand.</p></article>
+      <article class="card"><span class="tag">Stage 1 · Dawn</span><h4>Listen</h4><p class="small">One orb at a time, all real. Learn hover-to-listen and click-to-keep. The seedling grows.</p></article>
+      <article class="card"><span class="tag">Stage 2 · Noon</span><h4>Shimmer</h4><p class="small">Heat haze. The first mirages appear. Learn the tells: edge ripple, a too-clean tone. A ghost arm fades when one is kept.</p></article>
+      <article class="card"><span class="tag">Stage 3 · Dusk</span><h4>Layer</h4><p class="small">Orbs mix freely. Kept sounds layer into a slow ambient chord. The saguaro grows its arms.</p></article>
+      <article class="card"><span class="tag">Ending</span><h4>Night bloom</h4><p class="small">Flowers open. Your kept sounds play back; mirages you dissolved are quiet gaps. Replay or save a postcard.</p></article>
+    </div>
+
+    <h3 class="reveal">Flowchart</h3>
+    <div class="fig reveal">
+      <svg viewBox="0 0 1000 520" role="img" aria-label="Flowchart of the player journey and the core loop" font-family="Instrument Sans, system-ui, sans-serif">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#1b1630"/></marker>
+        </defs>
+        <style>
+          .n{fill:#fff;stroke:#1b1630;stroke-width:1.5}.n.s{fill:#e7eadc}.n.e{fill:#f6dcc9}.n.r{fill:#d7e6dc}.n.m{fill:#f6dcc9}
+          .t{font-size:13px;fill:#1b1630;text-anchor:middle}.l{font-size:11.5px;fill:#5b5373;text-anchor:middle;font-family:'DM Mono',monospace}
+          .a{fill:none;stroke:#1b1630;stroke-width:1.5;marker-end:url(#ar)}
+        </style>
+        <!-- top row -->
+        <g>
+          <rect class="n s" x="20" y="30" width="140" height="70" rx="12"/><text class="t" x="90" y="60">Title +</text><text class="t" x="90" y="78">headphone prompt</text>
+          <rect class="n" x="184" y="30" width="140" height="70" rx="12"/><text class="t" x="254" y="60">Opening:</text><text class="t" x="254" y="78">seed in sand</text>
+          <rect class="n" x="348" y="30" width="140" height="70" rx="12"/><text class="t" x="418" y="60">Stage 1 · Dawn</text><text class="t" x="418" y="78">all real</text>
+          <rect class="n" x="512" y="30" width="140" height="70" rx="12"/><text class="t" x="582" y="60">Stage 2 · Noon</text><text class="t" x="582" y="78">mirages appear</text>
+          <rect class="n" x="676" y="30" width="140" height="70" rx="12"/><text class="t" x="746" y="60">Stage 3 · Dusk</text><text class="t" x="746" y="78">mixed + layered</text>
+          <rect class="n e" x="840" y="30" width="140" height="70" rx="12"/><text class="t" x="910" y="60">Ending:</text><text class="t" x="910" y="78">night bloom</text>
+          <path class="a" d="M160 65 H182"/><path class="a" d="M324 65 H346"/><path class="a" d="M488 65 H510"/><path class="a" d="M652 65 H674"/><path class="a" d="M816 65 H838"/>
+        </g>
+        <!-- loop panel -->
+        <rect x="20" y="150" width="960" height="350" rx="16" fill="none" stroke="#5b5373" stroke-dasharray="6 6"/>
+        <text class="l" x="130" y="176">CORE LOOP — repeats inside every stage</text>
+        <rect class="n" x="40" y="215" width="160" height="60" rx="12"/><text class="t" x="120" y="241">Sound orb</text><text class="t" x="120" y="259">drifts in</text>
+        <rect class="n" x="236" y="215" width="190" height="60" rx="12"/><text class="t" x="331" y="241">Hover / focus:</text><text class="t" x="331" y="259">quiet preview</text>
+        <path class="a" d="M200 245 H234"/><path class="a" d="M426 245 H450"/>
+        <path class="n" d="M520 190 L600 245 L520 300 L440 245Z"/><text class="t" x="520" y="241">Real or</text><text class="t" x="520" y="259">mirage?</text>
+        <rect class="n r" x="650" y="215" width="170" height="60" rx="12"/><text class="t" x="735" y="238">Keep it: cactus grows,</text><text class="t" x="735" y="256">a kind word appears</text>
+        <path class="a" d="M600 245 H648"/><text class="l" x="624" y="236">real</text>
+        <rect class="n m" x="410" y="345" width="220" height="64" rx="12"/><text class="t" x="520" y="370">Keep it: it dissolves,</text><text class="t" x="520" y="388">a ghost arm fades. No loss.</text>
+        <path class="a" d="M520 300 V343"/><text class="l" x="548" y="326">mirage</text>
+        <path class="n" d="M905 190 L975 245 L905 300 L835 245Z"/><text class="t" x="905" y="241">Enough</text><text class="t" x="905" y="259">growth?</text>
+        <path class="a" d="M820 245 H833"/>
+        <path class="a" d="M905 190 V110" /><text class="l" x="935" y="134">yes → next stage</text>
+        <path d="M905 300 V455 H120 V277" class="a"/><text class="l" x="640" y="447">no → keep listening</text>
+        <path d="M520 409 V455" stroke="#1b1630" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+
+    <h3 class="reveal" style="margin-top:3rem">Storyboard</h3>
+    <p class="small mute reveal" style="max-width:62ch">Frames 2, 3 and 5 use the scene mockups below; frames 1 and 4 still use my own drawings as placeholders. The mapping is my proposal. Select a frame to see it larger.</p>
+    <div class="board reveal" id="board">
+      <article class="frame"><a href="assets/mirage-bloom/scene-horizon.jpg"><img src="assets/mirage-bloom/scene-horizon.jpg" alt="Marker drawing: banded blue, orange and yellow sky over grey rock forms and a red ground" style="object-position:50% 40%"></a><div class="t"><span class="drawtag">My drawing</span><h4>1 · Opening</h4><dl><dt>Goal</dt><dd>Arrive and settle</dd><dt>Input</dt><dd>Click “begin”</dd><dt>Feedback</dt><dd>Wind starts; the sky bands slowly drift</dd><dt>Next</dt><dd>A seed appears in the red earth</dd></dl></div></article>
+      <article class="frame"><a href="assets/mirage-bloom/mock-a-listen.jpg"><img src="assets/mirage-bloom/mock-a-listen.jpg" alt="Scene mockup: dawn plain with a drooping cubist saguaro, glass sound orbs and a giant ear" loading="lazy"></a><div class="t"><span class="mocktag">Scene mockup</span><h4>2 · Stage 1 · Listen</h4><dl><dt>Goal</dt><dd>Keep a real sound</dd><dt>Input</dt><dd>Hover, then click</dd><dt>Feedback</dt><dd>A tone plays; real orbs cast a shadow; the cactus grows</dd><dt>Next</dt><dd>Another sound drifts in</dd></dl></div></article>
+      <article class="frame"><a href="assets/mirage-bloom/mock-b-shimmer.jpg"><img src="assets/mirage-bloom/mock-b-shimmer.jpg" alt="Scene mockup: noon mirage lake, a cubist saguaro casting a shadow in its own shape, one pink orb with no shadow" loading="lazy"></a><div class="t"><span class="mocktag">Scene mockup</span><h4>3 · Stage 2 · Shimmer</h4><dl><dt>Goal</dt><dd>Tell real from mirage</dd><dt>Input</dt><dd>Listen before keeping</dd><dt>Feedback</dt><dd>Mirage orbs cast no shadow and wobble; every real thing casts its own shape</dd><dt>Next</dt><dd>Learn the tells</dd></dl></div></article>
+      <article class="frame"><a href="assets/mirage-bloom/scene-blocks.jpg"><img src="assets/mirage-bloom/scene-blocks.jpg" alt="Marker drawing: cacti drawn as patterned blocks, one filled with blue music notes, on a green field"></a><div class="t"><span class="drawtag">My drawing</span><h4>4 · Stage 3 · Layer</h4><dl><dt>Goal</dt><dd>Build the soundscape</dd><dt>Input</dt><dd>Keep sounds you trust</dd><dt>Feedback</dt><dd>Notes fill the cacti as sounds layer into a chord</dd><dt>Next</dt><dd>Arms appear</dd></dl></div></article>
+      <article class="frame"><a href="assets/mirage-bloom/mock-c-bloom.jpg"><img src="assets/mirage-bloom/mock-c-bloom.jpg" alt="Scene mockup: night plain with a moon, a flowering cubist saguaro and kept sounds rising as lit orbs" loading="lazy"></a><div class="t"><span class="mocktag">Scene mockup</span><h4>5 · Ending · Night bloom</h4><dl><dt>Goal</dt><dd>Hear what you kept</dd><dt>Input</dt><dd>Listen / replay</dd><dt>Feedback</dt><dd>Flowers open; kept sounds rise as lit orbs and replay</dd><dt>Next</dt><dd>Replay or save a postcard</dd></dl></div></article>
+    </div>
+    <h3 class="reveal" style="margin-top:3.4rem">Key scenes: three moments as mockups</h3>
+    <p class="small mute reveal" style="max-width:66ch">These are AI-generated vector mockups, made with Claude from my drawings and the references in section 06, to test an art direction. I will review them in Week 2 and decide what to keep. The saguaro uses Cubist structure; the space and light borrow from Dalí-style surrealism.</p>
+    <div class="scenes">
+      <article class="scene reveal"><figure class="plate"><a href="assets/mirage-bloom/mock-a-listen.jpg"><img src="assets/mirage-bloom/mock-a-listen.jpg" alt="Scene mockup A: Listen" loading="lazy"></a></figure><div><span class="mocktag">Stage 1 · Dawn</span><h4>Listen</h4>
+        <p>A wide, quiet plain. Sound bubbles drift in as glass spheres. Each keeps its musical note and holds a creature: woodpecker, raptor or small cavity-nester. A Cubist bobcat walks past as scenery. Hover to listen, click to keep. The seedling grows from a giant ear: sound is what plants it.</p>
+        <p class="small"><b>The tell:</b> real orbs cast a shadow on the sand.</p>
+        <p class="small mute"><b>Sources:</b> Dalí-style empty plain and floating objects with shadows; my hummingbird drawing; Cubist planes on the cactus.</p></div></article>
+      <article class="scene reveal"><figure class="plate"><a href="assets/mirage-bloom/mock-b-shimmer.jpg"><img src="assets/mirage-bloom/mock-b-shimmer.jpg" alt="Scene mockup B: Shimmer" loading="lazy"></a></figure><div><span class="mocktag">Stage 2 · Noon</span><h4>Shimmer</h4>
+        <p>Heat haze and a mirage lake. One orb is pink and wobbles. The cactus throws a shadow in its own shape, arms and crutch included, cut into Cubist planes like a second figure beside it. The real things around it look solid and the pink bubble looks wrong. The player learns to notice.</p>
+        <p class="small"><b>The tell:</b> mirage orbs cast no shadow, wobble, and sound too clean.</p>
+        <p class="small mute"><b>Sources:</b> Dalí-style long shadows on an empty plain; my drawing of giraffes among cacti (the mirage motif); the limp arm on a crutch for soft versus hard.</p></div></article>
+      <article class="scene reveal"><figure class="plate"><a href="assets/mirage-bloom/mock-c-bloom.jpg"><img src="assets/mirage-bloom/mock-c-bloom.jpg" alt="Scene mockup C: Night bloom" loading="lazy"></a></figure><div><span class="mocktag">Ending · Night</span><h4>Night bloom</h4>
+        <p>Flowers open and the sounds you kept rise as lit orbs, ready to replay. The flowers are drawn white: the National Park Service describes saguaro flowers as creamy white, opening at night.</p>
+        <p class="small"><b>The tell:</b> everything you kept glows; nothing unreal is left.</p>
+        <p class="small mute"><b>Sources:</b> moonlit plain; my drawing of red-flowered cacti; Cubist planes with pasted-paper pieces.</p></div></article>
+    </div>
+    <h3 class="reveal" style="margin-top:3.4rem">The bubbles: one note, three creatures</h3>
+    <p class="small mute reveal" style="max-width:66ch">Every bubble keeps the musical note. A small creature inside shows who is making the sound, drawn from animals the National Park Service lists in and around Saguaro National Park. Mirage bubbles use the same creatures in pink, so shape alone never gives the trick away.</p>
+    <div class="critters reveal">
+      <div class="critter"><svg viewBox="-45 -45 90 90" aria-hidden="true"><g transform="translate(-4,4)"><g fill="#4a2c1a"><ellipse cx="2" cy="6" rx="9" ry="19" transform="rotate(10)"/><circle cx="-5" cy="-17" r="8"/><path d="M-10,-19 L-30,-14 L-10,-12Z"/><path d="M5,22 L12,38 L-1,32Z"/><circle cx="-6" cy="-23" r="3.6" fill="#d8453c"/></g></g></svg><h4>Woodpecker</h4><p>The Gila woodpecker and gilded flicker dig nest cavities inside the saguaro’s flesh.</p></div>
+      <div class="critter"><svg viewBox="-45 -45 90 90" aria-hidden="true"><g transform="translate(0,2)"><g fill="#4a2c1a"><path d="M-40,-2 Q-22,-20 0,-8 Q22,-20 40,-2 Q22,-8 9,4 L6,20 L0,26 L-6,20 L-9,4 Q-22,-8 -40,-2Z"/><circle cx="0" cy="-6" r="5.5"/></g></g></svg><h4>Raptor</h4><p>Harris’s and red-tailed hawks use saguaros as nesting and hunting platforms, building stick nests among the arms.</p></div>
+      <div class="critter"><svg viewBox="-45 -45 90 90" aria-hidden="true"><g transform="scale(.9)"><ellipse cx="0" cy="2" rx="21" ry="28" fill="#4a2c1a"/><circle cx="0" cy="8" r="14" fill="#c99a62"/><circle cx="-6" cy="5" r="5" fill="#fff6e3"/><circle cx="6" cy="5" r="5" fill="#fff6e3"/><circle cx="-6" cy="5" r="2.3" fill="#2a1a10"/><circle cx="6" cy="5" r="2.3" fill="#2a1a10"/><path d="M-2,11 L2,11 L0,15Z" fill="#6a4426"/></g></svg><h4>Small cavity-nester</h4><p>When a woodpecker leaves a cavity, elf owls, screech owls, purple martins, finches and sparrows may move in.</p></div>
+      
+    </div>
+    <p class="small mute reveal" style="margin-top:.8rem">Sources (U.S. National Park Service): <a href="https://www.nps.gov/sagu/learn/nature/saguaro.htm">Saguaro ↗</a> (cavities, cavity-nesters, hawk nests), <a href="https://nps.gov/sagu/learn/nature/birds.htm">Birds ↗</a> (Gila woodpecker, elf owl, hawks). The NPS pages do not describe what these animals sound like, so the sounds in the prototype are my own generated tones, not recordings.</p>
+    <p class="small mute reveal"><b>Scenery, not a sound:</b> a Cubist bobcat walks near the cacti in the scenes. NPS shows a bobcat on a park wildlife camera and says bobcats do well around the park borders (<a href="https://www.nps.gov/sagu/learn/nature/bobcat.htm">Bobcats and Mountain Lions ↗</a>). It is decoration, not a collectable bubble.</p>
+
+
+  </div>
+</section>
+
+<!-- 06 STYLE + SOUND -->
+<section class="sec dark" id="s6">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="num" style="color:var(--bloom)">06</span>
+      <span class="kicker">Style &amp; sound guide</span>
+      <h2>Surreal space, cubist planes, honest sound.</h2>
+      <p class="lede">The game’s look combines my own drawings, Dalí-style surrealist space and Cubist structure. This guide outlines each reference, what I take from it, and how the game moves and sounds.</p>
+    </div>
+
+    <div class="reveal">
+      <h3>My drawings: the source motifs</h3>
+      <div class="gallery">
+        <figure class="plate"><img src="assets/mirage-bloom/scene-horizon.jpg" alt="Banded sky and grey rock forms" loading="lazy"><figcaption><b>Horizon · sky bands</b>Blue, orange and yellow bands of dashes and lines; rocks drawn as grey contour lines; red hatched ground.</figcaption></figure>
+        <figure class="plate"><img src="assets/mirage-bloom/scene-blocks.jpg" alt="Cacti as patterned blocks with music notes" loading="lazy"><figcaption><b>Blocks · sound as pattern</b>Cacti become buildings, each with its own fill. One is covered in blue music notes.</figcaption></figure>
+        <figure class="plate"><img src="assets/mirage-bloom/scene-spikes.jpg" alt="Triangular cacti, hummingbird, dandelions" loading="lazy"><figcaption><b>Spikes · life in the pattern</b>Triangles filled with tiny cacti; a hummingbird; dandelion seed heads.</figcaption></figure>
+        <figure class="plate"><img src="assets/mirage-bloom/scene-giraffes.jpg" alt="Giraffes among cacti" loading="lazy"><figcaption><b>Giraffes · the mirage</b>Giraffes where they don’t belong, surrounded by red note patterns.</figcaption></figure>
+        <figure class="plate"><img src="assets/mirage-bloom/scene-blooms.jpg" alt="Ribbed cacti with red flowers and a spiral cactus" loading="lazy"><figcaption><b>Blooms · the ending</b>Dense vertical hatching, red flowers, and a cactus built from spirals.</figcaption></figure>
+      </div>
+      <div class="motifs">
+        <div><b>Double outline</b>Every shape has a colour line plus a second yellow or brown line beside it.</div>
+        <div><b>Pattern fills</b>Dashes, dots, hatching, spirals, tiny cacti and music notes fill each form. Nothing is flat.</div>
+        <div><b>Bands and rhythm</b>Skies and grounds are rows of parallel lines. Lines suggest motion and sound.</div>
+        <div><b>Visitors</b>A hummingbird, dandelion puffs, giraffes: small surprises that become the real and the not-real.</div>
+      </div>
+      <p class="small mute" style="margin-top:1rem">All five drawings are my own marker drawings. They supply the motifs (hummingbird, giraffe, flowers, notes as pattern, banded skies). The Week 2 build redraws these elements as layers so they can animate (drift, shimmer, grow).</p>
+    </div>
+    <div class="reveal" style="margin-top:3rem">
+      <h3>Art direction: surreal space, cubist structure</h3>
+      <div class="grid g3 layers">
+        <article class="card"><h4>1 · My drawings</h4><p class="small">Motifs and rhythm: the hummingbird, the giraffe, red flowers, music notes as pattern, banded skies.</p></article>
+        <article class="card"><h4>2 · Surreal space</h4><p class="small">A vast, quiet plain under hazy light. Objects float and cast long shadows. Soft against hard: a limp cactus arm propped on a crutch. Inspired by Dalí.</p></article>
+        <article class="card"><h4>3 · Cubist structure</h4><p class="small">The saguaro is built from flat planes, each seen from a different side, with a face seen from two angles at once and pieces of pasted paper. Inspired by Picasso and Braque.</p></article>
+      </div>
+      <h4 style="margin-top:2rem;font-family:var(--sans)">Reference outline</h4>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Reference · creators</th><th>What the source says</th><th>What I take</th><th>What I leave out</th></tr></thead>
+          <tbody>
+            <tr><td><b>Analytical Cubism</b>, about 1908–12 · Pablo Picasso, Georges Braque, Juan Gris<br><a href="https://www.tate.org.uk/art/art-terms/analytical-cubism">Tate: Analytical cubism ↗</a></td><td>Tate: “a fragmentary image of multiple viewpoints and overlapping planes”, with a simplified palette so the structure is not distracted.</td><td>The saguaro is cut into slanted, overlapping planes, and its shadow is cut into planes too, in several dark tones with ink edges, so it reads as a companion figure. A face on the trunk shows a frontal eye and a profile eye together.</td><td>Its restrained palette: I keep colour so the sound orbs and flowers can glow.</td></tr>
+            <tr><td><b>Papier collé and Synthetic Cubism</b>, about 1912–14 · Braque, Picasso<br><a href="https://www.tate.org.uk/art/art-terms/p/papier-colle">Tate: Papier collé ↗</a> · <a href="https://www.tate.org.uk/art/art-terms/s/synthetic-cubism">Tate: Synthetic cubism ↗</a></td><td>Tate: Braque pasted imitation wood-grain paper; Picasso used newspaper (<i>Le Journal</i>) “to introduce the reality of everyday life”. Synthetic Cubism has simpler shapes and brighter colour.</td><td>Pasted-paper planes on the cactus: wood grain, newsprint, and sheet music. The sheet music is my own addition because the game is about sound.</td><td>No real newspaper text. No copy of any specific collage.</td></tr>
+            <tr><td><b>The Persistence of Memory</b>, 1931 · Salvador Dalí, Museum of Modern Art<br><a href="https://en.wikipedia.org/wiki/The_Persistence_of_Memory">Wikipedia ↗</a></td><td>Oil on canvas: a desolate coastal landscape with craggy rocks and a large foreboding shadow in the foreground. The soft watches show Dalí’s idea of “softness” and “hardness”.</td><td>The empty plain, hazy distance and long shadows (each cactus casts its own shape, drawn in Cubist planes); the soft and hard idea becomes a limp saguaro arm held up by a hard wooden crutch.</td><td>No soft watches and no copy of the composition.</td></tr>
+            <tr><td><b>Double image / paranoiac-critical method</b>, 1930 · Salvador Dalí<br><a href="https://en.wikipedia.org/wiki/Paranoiac-critical_method">Wikipedia ↗</a></td><td>A double image is an ambiguous picture that can be seen as two different objects.</td><td>Loosely: orbs that look real but are not, told apart only by their missing shadow. It is the theme of hallucination, drawn.</td><td>It is not a true double image; it only borrows the idea.</td></tr>
+            <tr><td><b>My five drawings</b> · me</td><td>Marker drawings with pattern fills, double outlines and banded skies.</td><td>Hummingbird, giraffe, flowers, notes as pattern.</td><td>Flat white-paper look: the game needs depth to show shadows.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4 style="margin-top:2rem;font-family:var(--sans)">Cubist plane palette</h4>
+      <div class="swatches">
+        <div class="sw"><i style="background:#d9b36a"></i><span><b>#D9B36A</b>Ochre plane</span></div>
+        <div class="sw"><i style="background:#efe2c0"></i><span><b>#EFE2C0</b>Paper, sheet music</span></div>
+        <div class="sw"><i style="background:#b5593b"></i><span><b>#B5593B</b>Rust plane</span></div>
+        <div class="sw"><i style="background:#7d93a8"></i><span><b>#7D93A8</b>Blue-grey plane</span></div>
+        <div class="sw"><i style="background:#3f7d55"></i><span><b>#3F7D55</b>Cactus green</span></div>
+        <div class="sw"><i style="background:#1a1022"></i><span><b>#1A1022</b>Ink outline</span></div>
+      </div>
+      <p class="small mute" style="margin-top:1rem">These are influences on style. The scenes are original mockups and do not reproduce any painting by Dalí, Picasso or Braque.</p>
+    </div>
+
+    <div class="reveal" style="margin-top:3rem">
+      <h3>Colour: from my drawings</h3>
+      <div class="swatches">
+        <div class="sw"><i style="background:#f2dc2e"></i><span><b>#F2DC2E</b>Marker yellow · sun, outlines</span></div>
+        <div class="sw"><i style="background:#ee7a1f"></i><span><b>#EE7A1F</b>Orange · warmth, real sounds</span></div>
+        <div class="sw"><i style="background:#d9264a"></i><span><b>#D9264A</b>Red · flowers, notes</span></div>
+        <div class="sw"><i style="background:#6a3fb0"></i><span><b>#6A3FB0</b>Purple · night, mirage</span></div>
+        <div class="sw"><i style="background:#1d6fbf"></i><span><b>#1D6FBF</b>Blue · sky, water</span></div>
+        <div class="sw"><i style="background:#1e5b3a"></i><span><b>#1E5B3A</b>Deep green · the saguaro</span></div>
+      </div>
+      <p class="small mute" style="margin-top:1rem">Colours are matched by eye from my drawings, so treat the hex values as approximate. Real sounds are warm glass spheres that cast a shadow; mirage sounds are pink, wobble and cast none. Colour is never the only cue: mirages also shimmer and sound different. Game text is near-black or cream on a strongly contrasting background (a response to the contrast complaints about SNUG).</p>
+    </div>
+
+    <div class="grid g2 reveal" style="margin-top:2.4rem;align-items:center">
+      <div><p class="specimen">Listen, <em>then</em> keep.</p></div>
+      <div class="small">
+        <p><b>Fraunces</b> (a soft serif) for titles and the cactus’s words; <b>Instrument Sans</b> for interface text; <b>DM Mono</b> for labels. Interface is minimal, as in Ducklings: a small count and one pointer, no score, no timer. The game moves from dawn through noon to night, as in the scene mockups.</p>
+        <p style="margin:0"><b>Motion:</b> slow drift, long easings, heat-shimmer on mirages only; pattern fills can slowly shift like dashes in the wind. The camera stays still (a direct answer to the dizziness I felt in Ducklings). Reduced-motion setting turns shimmer and drift off.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:3rem">
+      <h3>Sound, silence &amp; rhythm</h3>
+      <div class="layer"><b>Ambient bed</b><div>Soft low wind through filtered noise, slowly swelling. Always present when sound is on. Inspired by the sound of waves and piano in Penguin Isle.</div></div>
+      <div class="layer"><b>Real sounds</b><div>Warm pentatonic tones with a soft attack, stereo drift and a gentle echo — they feel like they live in a space. When kept, they join the layered chord.</div></div>
+      <div class="layer"><b>Mirage sounds</b><div>Perfectly steady, centred, dry, a hint of vibrato — slightly too clean, then cut off. Kept mirages fall in pitch and vanish.</div></div>
+      <div class="layer"><b>Silence</b><div>The stage-end pause and the quiet gaps in the final replay are intentional: silence is where mirages were.</div></div>
+      <div class="layer"><b>Control</b><div>Sound is off until the visitor turns it on (button in the top bar). The game must be fully playable muted using visual tells.</div></div>
+    </div>
+
+    <div class="reveal" style="margin-top:3rem">
+      <h3>Annotated references</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Reference · credit</th><th>What I observed</th><th>What I take</th><th>What I leave</th></tr></thead>
+          <tbody>
+            <tr><td><b>Ducklings</b> · Pelican Party (Jesper &amp; Jurgen)</td><td>Flat saturated blue water, low-poly pads and reeds, white duck, a tiny HUD; fast movement made me dizzy</td><td>Visible trail of what you collected; one arrow to guide you; a plain, calm ground</td><td>Fast camera, hostile boats</td></tr>
+            <tr><td><b>Letting Go</b> · little-moon-games</td><td>Easy to operate; sorting a room feels intimate</td><td>Simple interface, meaning through small objects</td><td>Irreversible, heavy choices</td></tr>
+            <tr><td><b>SNUG</b> · cookiecrayon</td><td>Clear task list; satisfying physics; sound design praised by players</td><td>List-led clarity; tactile feedback</td><td>Low-contrast text</td></tr>
+            <tr><td><b>Proteus</b> · Ed Key &amp; David Kanaga</td><td>Every visual element has its own sound</td><td>Sound as interface; goal-less calm</td><td>First-person navigation</td></tr>
+            <tr><td><b>Penguin Isle</b> · HABBY</td><td>Waves and soft piano; passive growth</td><td>Ambient mood; idle growth</td><td>Monetisation and events</td></tr>
+            <tr><td><b>Animal Restaurant</b> · DH Games / 2Miles</td><td>Warm hand-drawn style; more mission-driven</td><td>Little notes that give the world a voice</td><td>Constant upgrade pressure</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small mute" style="margin-top:1rem"><b>Asset policy:</b> the five source drawings are my own. The three scene mockups are AI-generated vector artwork made with Claude from my drawings and the references above, and are not copies of any existing work. The Ducklings screenshots in section 02 are my own captures, shown for study with credit to Pelican Party. The page’s other graphics are original SVG and all prototype sounds are generated in the browser. Any future recordings or assets will be credited with their usage terms checked.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 PLAN -->
+<section class="sec paper" id="s7">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="num">07</span>
+      <span class="kicker">Two-week build plan</span>
+      <h2>Build in Week 2. Test and refine in Week 3.</h2>
+      <p class="lede">Scope stays small: one interaction, an opening, three short stages, an ending.</p>
+    </div>
+
+    <div class="weeks reveal">
+      <article class="week">
+        <h3>Week 2 <span>Build</span></h3>
+        <ol>
+          <li><b>Days 1–2</b><div>Scene and saguaro growth (SVG), orb system, listen → keep interaction.</div></li>
+          <li><b>Day 3</b><div>Audio engine in Web Audio: wind bed, real and mirage tones, sound toggle, autoplay rules on mobile.</div></li>
+          <li><b>Day 4</b><div>Three stages, mirage rules, words of wellbeing, opening and ending screens.</div></li>
+          <li><b>Day 5</b><div>Idle growth with local save, motion polish, first full playthrough. <b style="display:inline;opacity:1">Early test:</b> microphone recording.</div></li>
+        </ol>
+      </article>
+      <article class="week b">
+        <h3>Week 3 <span>Test &amp; refine</span></h3>
+        <ol>
+          <li><b>Days 1–2</b><div>Play-test with at least five people. Ask: Could you hear the difference? Did you feel calm? Any dizziness?</div></li>
+          <li><b>Day 3</b><div>Tune mirage tells and pacing from what testers actually did, not what I expected.</div></li>
+          <li><b>Day 4</b><div>Accessibility: contrast, keyboard play, reduced motion, muted play, phone touch.</div></li>
+          <li><b>Day 5</b><div>Publish, check on another device, add credits and a short design note.</div></li>
+        </ol>
+      </article>
+    </div>
+
+    <div class="done reveal">
+      <div class="card"><h4>Done means</h4><p class="small">A first-time player can finish in about six minutes, understands listen-then-keep without instructions, and reaches the night bloom.</p></div>
+      <div class="card"><h4>Biggest risks</h4><p class="small">Microphone permission and mobile audio autoplay; mirages being too easy or too hard to tell apart. Both are tested early.</p></div>
+      <div class="card"><h4>If time runs short</h4><p class="small">Cut the record-your-own-sound feature first. The core loop, three stages and ending stay.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b style="font-family:var(--serif);font-size:1.2rem">Mirage Bloom</b><br>Game proposal · AI for Design · Week 1<br>Celia Yang</div>
+    <div class="small">Course brief: <a href="https://unibiubiu.github.io/videos-and-reading/hallucination-web-game/">Hallucination — Research &amp; Pitch</a><br>Portfolio: <a href="index.html">Celia Yang</a></div>
+    <div class="small" style="max-width:420px;opacity:.8">Research gathered with AI assistance and checked against the linked sources. Items marked as unverified were not confirmed. The scene mockups are AI-generated.</div>
+  </div>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(s,r){return (r||document).querySelector(s)};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var NS = 'http://www.w3.org/2000/svg';
+
+  /* reduced motion: stop shimmer */
+  if(reduce){ var an=$('#heatAnim'); if(an) an.remove(); }
+
+  /* stars */
+  (function(){
+    var g=$('#stars'); if(!g) return; var s='';
+    for(var i=0;i<90;i++){
+      var x=Math.random()*1600, y=Math.random()*430, r=Math.random()*1.6+.4;
+      s+='<circle cx="'+x.toFixed(0)+'" cy="'+y.toFixed(0)+'" r="'+r.toFixed(1)+'" opacity="'+(Math.random()*.7+.2).toFixed(2)+'"/>';
+    }
+    g.innerHTML=s;
+  })();
+
+  /* reveal on scroll */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  $$('.reveal').forEach(function(el){io.observe(el)});
+
+  /* nav highlight */
+  var links = $$('.top li a');
+  var so = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.toggle('on', a.getAttribute('data-n')===e.target.id)});
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  ['s1','s2','s3','s4','s5','s6','s7'].forEach(function(id){so.observe(document.getElementById(id))});
+
+  /* ---------- saguaro geometry (shared by demo + storyboard) ---------- */
+  function geom(g){
+    var H = 24 + g*190, w = 10 + g*16, o = {H:H, w:w, trunk:'M0 0 V'+(-H), left:null, right:null, tips:[[0,-H]]};
+    if(g>=.35){
+      var y=-H*.5, x=w*2.9;
+      o.left='M0 '+y+' H'+(-w*1.7)+' Q'+(-x)+' '+y+' '+(-x)+' '+(y-w*1.3)+' V'+(y-H*.28);
+      o.tips.push([-x, y-H*.28]);
+    }
+    if(g>=.6){
+      var y2=-H*.36, x2=w*2.9;
+      o.right='M0 '+y2+' H'+(w*1.7)+' Q'+x2+' '+y2+' '+x2+' '+(y2-w*1.3)+' V'+(y2-H*.24);
+      o.tips.push([x2, y2-H*.24]);
+    }
+    return o;
+  }
+  function flowerMarkup(tips, k){
+    var s='';
+    tips.forEach(function(t){
+      s+='<g transform="translate('+t[0]+' '+(t[1]-6*k)+') scale('+k+')">'
+       +'<circle r="9" fill="#fff6e3"/><circle r="3.4" fill="#f2b96b"/>'
+       +'<circle cx="-7" cy="3" r="5" fill="#fff6e3" opacity=".9"/><circle cx="7" cy="3" r="5" fill="#fff6e3" opacity=".9"/></g>';
+    });
+    return s;
+  }
+
+  /* ---------- Chinese hints (English kept) ---------- */
+  var ZH={
+    'Turn sound on, then hover an orb to listen.':'请先开启声音，然后将鼠标移到气泡上聆听。',
+    'Hover an orb to listen. Click to keep it.':'将鼠标移到气泡上聆听，点击即可收藏。',
+    'Turn sound on to hear it — or look for the shimmer.':'开启声音才能听见——或者留意闪烁的幻影。',
+    'That sound was never there.':'那个声音根本不存在。',
+    'Breathe in.':'深呼吸。','Listen closely.':'仔细聆听。','Slow is still growing.':'慢，也是在生长。','Rest is part of it.':'休息也是其中的一部分。',
+    'You are here.':'你就在这里。','Let it be quiet.':'让一切安静下来。','Soft is strong.':'柔软即是力量。','Almost bloom.':'就要开花了。',
+    'Night bloom. These flowers open after dark and close the next afternoon.':'夜间开花。这些花在天黑后绽放，次日午后闭合。',
+    'Dawn · seed':'黎明 · 种子','Noon · shimmer':'正午 · 闪烁','Dusk · layering':'黄昏 · 层叠','Night · bloom':'夜晚 · 开花'
+  };
+  var ES={
+    'Turn sound on, then hover an orb to listen.':'Activa el sonido y pasa el cursor sobre una burbuja para escuchar.',
+    'Hover an orb to listen. Click to keep it.':'Pasa el cursor sobre una burbuja para escuchar. Haz clic para guardarla.',
+    'Turn sound on to hear it — or look for the shimmer.':'Activa el sonido para oírla, o busca el destello.',
+    'That sound was never there.':'Ese sonido nunca estuvo ahí.',
+    'Breathe in.':'Inhala.','Listen closely.':'Escucha con atención.','Slow is still growing.':'Despacio también se crece.','Rest is part of it.':'El descanso también es parte del camino.',
+    'You are here.':'Estás aquí.','Let it be quiet.':'Deja que haya silencio.','Soft is strong.':'Lo suave es fuerte.','Almost bloom.':'Casi florece.',
+    'Night bloom. These flowers open after dark and close the next afternoon.':'Floración nocturna. Estas flores se abren al caer la noche y se cierran la tarde siguiente.',
+    'Dawn · seed':'Amanecer · semilla','Noon · shimmer':'Mediodía · destello','Dusk · layering':'Atardecer · capas','Night · bloom':'Noche · floración'
+  };
+  function bi(t){ return t+(ZH[t]?'<span class="zh" lang="zh-Hans">'+ZH[t]+'</span>':'')+(ES[t]?'<span class="zh es" lang="es">'+ES[t]+'</span>':''); }
+
+  /* ---------- cubist saguaro (Picasso/Braque-style planes) ---------- */
+  var CT=['#3f7d55','#9ad29b','#d9b36a','#7d93a8','url(#dscore)','#b5593b','#2f6a4a','url(#dwood)','#efe2c0'];
+  var CS=['#2b1a40','#5a3366','#8a4a3a','#3d4a7a','#b0663f'];
+  var INK='#1a1022';
+  function limb(x0,y0,x1,y1,wd,seed){
+    var dx=x1-x0, dy=y1-y0, len=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
+    var n=Math.max(2,Math.round(len/(wd*1.35))), b=[], body='', sh='', k, i;
+    for(k=0;k<=n;k++){
+      var t=k/n, cx=x0+dx*t, cy=y0+dy*t, s=(k===0||k===n)?0:(k%2?1:-1)*wd*.24;
+      b.push([[cx+nx*wd/2+ux*s, cy+ny*wd/2+uy*s],[cx-nx*wd/2-ux*s, cy-ny*wd/2-uy*s]]);
+    }
+    for(i=0;i<n;i++){
+      var j=((seed*7+i*13)%5)-2, ox=nx*j*wd*.05, oy=ny*j*wd*.05, a=b[i], c=b[i+1];
+      var pts=[a[0],c[0],c[1],a[1]].map(function(q){return (q[0]+ox).toFixed(1)+','+(q[1]+oy).toFixed(1)}).join(' ');
+      body+='<polygon points="'+pts+'" fill="'+CT[(seed+i*3)%CT.length]+'" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>';
+      var mx=(a[0][0]+c[0][0]+a[1][0]+c[1][0])/4+ox, my=(a[0][1]+c[0][1]+a[1][1]+c[1][1])/4+oy;
+      body+='<path d="M'+(mx-ux*wd*.28).toFixed(1)+','+(my-uy*wd*.28).toFixed(1)+' L'+(mx+ux*wd*.28).toFixed(1)+','+(my+uy*wd*.28).toFixed(1)+'" stroke="'+INK+'" stroke-width="1.4" opacity=".45"/>';
+      sh+='<polygon points="'+pts+'" fill="'+CS[(seed+i*2)%CS.length]+'" stroke="'+INK+'" stroke-width="2"/>';
+    }
+    var tx=x1+ux*wd*.95, ty=y1+uy*wd*.95;
+    var cap=(x1+nx*wd/2).toFixed(1)+','+(y1+ny*wd/2).toFixed(1)+' '+tx.toFixed(1)+','+ty.toFixed(1)+' '+(x1-nx*wd/2).toFixed(1)+','+(y1-ny*wd/2).toFixed(1);
+    body+='<polygon points="'+cap+'" fill="#9ad29b" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>';
+    sh+='<polygon points="'+cap+'" fill="#3d4a7a" stroke="'+INK+'" stroke-width="2"/>';
+    return {body:body, shadow:sh};
+  }
+  function cubeFace(cx,cy,sc){
+    return '<g transform="translate('+cx.toFixed(1)+','+cy.toFixed(1)+') scale('+sc.toFixed(2)+')" stroke="'+INK+'" stroke-linejoin="round" stroke-linecap="round" fill="none">'
+     +'<path d="M-26,-4 Q-6,-24 18,-6 Q-4,10 -26,-4Z" fill="#fff6e3" stroke-width="4.5"/><circle cx="-6" cy="-9" r="6.5" fill="'+INK+'"/>'
+     +'<path d="M28,-14 L52,-8 L30,6 Z" fill="#fff6e3" stroke-width="4.5"/><circle cx="38" cy="-4" r="3.2" fill="'+INK+'"/>'
+     +'<path d="M10,-6 L24,38 L2,36 Z" fill="#d9b36a" stroke-width="4.5"/>'
+     +'<path d="M-26,50 Q-6,66 18,46" stroke-width="5"/></g>';
+  }
+  function cubistSag(G, withFace){
+    var w=G.w*1.55, body='', sh='', L;
+    L=limb(0,0,0,-G.H,w,1); body+=L.body; sh+=L.shadow;
+    if(G.left){ var y=-G.H*.5, x=G.w*2.9;
+      L=limb(0,y,-x,y,w*.66,3); body+=L.body; sh+=L.shadow;
+      L=limb(-x,y,-x,y-G.H*.28-G.w*1.3,w*.66,5); body+=L.body; sh+=L.shadow; }
+    if(G.right){ var y2=-G.H*.36, x2=G.w*2.9;
+      L=limb(0,y2,x2,y2,w*.66,2); body+=L.body; sh+=L.shadow;
+      L=limb(x2,y2,x2,y2-G.H*.24-G.w*1.3,w*.66,4); body+=L.body; sh+=L.shadow; }
+    if(withFace && G.H>70) body+=cubeFace(w*.06, -G.H*.62, Math.max(.35,w/54));
+    return {body:body, shadow:sh};
+  }
+  var dCube=$('#dCube'), dShadow=$('#dShadow');
+  function renderCube(G){ var c=cubistSag(G,true); dCube.innerHTML=c.body; dShadow.innerHTML=c.shadow; }
+
+  /* ---------- audio ---------- */
+  var ac=null, master=null, delay=null, soundOn=false;
+  var btn = $('#soundBtn');
+  function initAudio(){
+    if(ac) return true;
+    var AC = window.AudioContext||window.webkitAudioContext; if(!AC) return false;
+    ac = new AC();
+    master = ac.createGain(); master.gain.value=0; master.connect(ac.destination);
+    delay = ac.createDelay(1.5); delay.delayTime.value=.34;
+    var fb=ac.createGain(); fb.gain.value=.38; var wet=ac.createGain(); wet.gain.value=.4;
+    delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(master);
+    // wind: smoothed random walk, low-passed, slowly modulated
+    var len=ac.sampleRate*6, buf=ac.createBuffer(1,len,ac.sampleRate), d=buf.getChannelData(0), last=0, i;
+    for(i=0;i<len;i++){ var wn=Math.random()*2-1; last=(last+.02*wn)/1.02; d[i]=last*3.2; }
+    var fade=Math.floor(ac.sampleRate*.4);
+    for(i=0;i<fade;i++){ var f=i/fade; d[i]*=f; d[len-1-i]*=f; }
+    var src=ac.createBufferSource(); src.buffer=buf; src.loop=true;
+    var lp=ac.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=520;
+    var lfo=ac.createOscillator(); lfo.frequency.value=.07; var lg=ac.createGain(); lg.gain.value=240;
+    lfo.connect(lg); lg.connect(lp.frequency); lfo.start();
+    var wg=ac.createGain(); wg.gain.value=.55;
+    src.connect(lp); lp.connect(wg); wg.connect(master); src.start();
+    return true;
+  }
+  function setSound(on){
+    if(on){ if(!initAudio()) return; if(ac.state==='suspended') ac.resume(); }
+    soundOn=on;
+    if(master) master.gain.setTargetAtTime(on?.8:0, ac.currentTime, .4);
+    btn.setAttribute('aria-pressed', on?'true':'false');
+    btn.textContent = on?'♪ Sound on':'♪ Sound off';
+    var cap=$('#cap'); if(cap && on && kept+dissolved===0) cap.innerHTML=bi('Hover an orb to listen. Click to keep it.');
+  }
+  btn.addEventListener('click', function(){ setSound(!soundOn); });
+  var PENT=[261.63,293.66,329.63,392,440,523.25,587.33];
+  function tone(freq, real, vol){
+    if(!soundOn||!ac) return; vol=vol||1;
+    var t=ac.currentTime, o=ac.createOscillator(), g=ac.createGain(), out=g;
+    o.type='sine'; o.frequency.value=freq; o.connect(g);
+    if(real){
+      var o2=ac.createOscillator(); o2.type='sine'; o2.frequency.value=freq*2.005; var g2=ac.createGain(); g2.gain.value=.18; o2.connect(g2); g2.connect(g);
+      o2.start(t); o2.stop(t+2.4);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.22*vol,t+.05); g.gain.exponentialRampToValueAtTime(.0008,t+2.2);
+      var node=g;
+      if(ac.createStereoPanner){ var p=ac.createStereoPanner(); p.pan.value=Math.random()*1.4-.7; g.connect(p); node=p; }
+      node.connect(master); node.connect(delay);
+      o.start(t); o.stop(t+2.4);
+    } else {
+      // mirage: perfectly steady, centred, dry, slight vibrato, then cut
+      var v=ac.createOscillator(), vg=ac.createGain(); v.frequency.value=6; vg.gain.value=3; v.connect(vg); vg.connect(o.frequency); v.start(t); v.stop(t+1.1);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.16*vol,t+.01); g.gain.setValueAtTime(.16*vol,t+.9); g.gain.linearRampToValueAtTime(0,t+.93);
+      g.connect(master); o.start(t); o.stop(t+1);
+    }
+  }
+  function dissolveSound(freq){
+    if(!soundOn||!ac) return; var t=ac.currentTime, o=ac.createOscillator(), g=ac.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(freq,t); o.frequency.exponentialRampToValueAtTime(freq*.5,t+.7);
+    g.gain.setValueAtTime(.14,t); g.gain.exponentialRampToValueAtTime(.0005,t+.7); o.connect(g); g.connect(master); o.start(t); o.stop(t+.75);
+  }
+
+  /* ---------- demo ---------- */
+  var stage=$('#stage'), cap=$('#cap'), countEl=$('#count'), nameEl=$('#stageName');
+  var tTrunk=$('#dTrunk'), tLeft=$('#dLeft'), tRight=$('#dRight'), ghosts=$('#dGhosts'), flowers=$('#flowers');
+  var growth=.02, kept=0, dissolved=0, timer=null, orbCount=0, bloomed=false;
+  var SOUNDS=['Woodpecker','Raptor','Small cavity-nester'];
+  var CRIT=[
+   '<g fill="C"><ellipse cx="2" cy="6" rx="9" ry="19" transform="rotate(10)"/><circle cx="-5" cy="-17" r="8"/><path d="M-10,-19 L-30,-14 L-10,-12Z"/><path d="M5,22 L12,38 L-1,32Z"/><circle cx="-6" cy="-23" r="3.6" fill="#d8453c"/></g>',
+   '<g fill="C"><path d="M-40,-2 Q-22,-20 0,-8 Q22,-20 40,-2 Q22,-8 9,4 L6,20 L0,26 L-6,20 L-9,4 Q-22,-8 -40,-2Z"/><circle cx="0" cy="-6" r="5.5"/></g>',
+   '<g transform="scale(.9)"><ellipse cx="0" cy="2" rx="21" ry="28" fill="C"/><circle cx="0" cy="8" r="14" fill="#c99a62"/><circle cx="-6" cy="5" r="5" fill="#fff6e3"/><circle cx="6" cy="5" r="5" fill="#fff6e3"/><circle cx="-6" cy="5" r="2.3" fill="#2a1a10"/><circle cx="6" cy="5" r="2.3" fill="#2a1a10"/></g>'];
+  function orbIcon(kind,mirage){
+    var c=mirage?'#9a3f6a':'#4a2c1a', n=mirage?'#ff7fb0':'#f4b93a', ol=mirage?'#5a1840':'#2a1534';
+    return '<svg viewBox="-45 -45 90 90" aria-hidden="true"><g transform="translate(-4,3) scale(.78)" opacity=".85">'+CRIT[kind].replace(/"C"/g,'"'+c+'"')+'</g><g transform="translate(20,-14) scale(.8)" stroke="'+ol+'" stroke-width="2.8" stroke-linejoin="round"><path d="M6.5,-1 V-35 Q22,-31 22,-15 L17,-15 Q17,-25 11,-28 V-1 Z" fill="'+n+'" fill-opacity=".5"/><ellipse rx="11.5" ry="8.5" transform="rotate(-20)" fill="'+n+'" fill-opacity=".5"/></g></svg>';
+  }
+
+  /* ---------- hero: cubist cacti with cubist shadows, drifting bubbles ---------- */
+  (function(){
+    var hc=$('#heroCacti'), ho=$('#heroOrbs'); if(!hc||!ho) return;
+    var G=geom(1), C=cubistSag(G,true), s='';
+    [[1330,800,1.5,1],[1530,812,.78,.8],[1130,790,.56,.7]].forEach(function(p){
+      s+='<g transform="translate('+p[0]+' '+p[1]+') scale('+p[2]+')" opacity="'+p[3]+'">'
+        +'<g transform="matrix(1,0,-.65,-.36,0,0)" opacity=".85">'+C.shadow+'</g>'+C.body+'</g>';
+    });
+    hc.innerHTML=s;
+    var o='';
+    [[620,250,34,0],[860,150,26,1],[1020,330,30,2]].forEach(function(p){
+      var inner=orbIcon(p[3],false).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+      o+='<g transform="translate('+p[0]+' '+p[1]+')"><g class="horb"><circle r="'+p[2]*1.9+'" fill="#ffd58a" opacity=".16" filter="url(#hblur)"/><circle r="'+p[2]+'" fill="url(#horbG)" stroke="#fff6e3" stroke-opacity=".5" stroke-width="2"/>'
+        +'<g transform="scale('+(p[2]/45)+')">'+inner+'</g></g></g>';
+    });
+    ho.innerHTML=o;
+  })();
+  var WORDS=['Breathe in.','Listen closely.','Slow is still growing.','Rest is part of it.','You are here.','Let it be quiet.','Soft is strong.','Almost bloom.'];
+  var capTimer=null;
+  function say(t,sticky){ cap.style.opacity=1; cap.innerHTML=bi(t); clearTimeout(capTimer); if(!sticky) capTimer=setTimeout(function(){cap.style.opacity=.0},3400); }
+  function draw(){
+    var G=geom(growth);
+    tTrunk.setAttribute('d',G.trunk); tTrunk.setAttribute('stroke-width',G.w);
+    [['left',tLeft],['right',tRight]].forEach(function(p){
+      var d=G[p[0]]; if(d){ p[1].setAttribute('d',d); p[1].setAttribute('stroke-width',G.w*.66); p[1].setAttribute('opacity','1'); p[1].style.transition='opacity 1.2s'; }
+      else p[1].setAttribute('opacity','0');
+    });
+    flowers.innerHTML = flowerMarkup(G.tips,1.25);
+    renderCube(G);
+    nameEl.innerHTML = bi(growth<.35?'Dawn · seed':(growth<.7?'Noon · shimmer':(bloomed?'Night · bloom':'Dusk · layering')));
+    countEl.innerHTML='Kept '+kept+' · Dissolved '+dissolved+'<span class="zh">已收藏 '+kept+' · 已消散 '+dissolved+'</span><span class="zh es">Guardados '+kept+' · Disueltos '+dissolved+'</span>';
+  }
+  function ghostArm(){
+    var G=geom(Math.max(growth,.4)), side=Math.random()<.5?-1:1, y=-G.H*(.3+Math.random()*.3), x=G.w*2.9*side;
+    var p=document.createElementNS(NS,'path');
+    p.setAttribute('d','M0 '+y+' H'+(G.w*1.7*side)+' Q'+x+' '+y+' '+x+' '+(y-G.w*1.3)+' V'+(y-G.H*.22));
+    p.setAttribute('class','ghost'); p.setAttribute('stroke-width',G.w*.66); p.setAttribute('fill','none'); ghosts.appendChild(p);
+    setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); },2700);
+  }
+  function spawn(){
+    if(bloomed) return;
+    var live=$$('.orb:not(.gone)',stage);
+    if(live.length>=4) return;
+    var mirage = growth>.15 && Math.random()<.38;
+    var b=document.createElement('button'); b.type='button'; b.className='orb'+(mirage?' mirage':'');
+    var kind=orbCount%SOUNDS.length, name=SOUNDS[kind]; orbCount++; b.innerHTML=orbIcon(kind,mirage);
+    b.setAttribute('aria-label','Sound: '+name+'. Hover or focus to listen, then press to keep.');
+    b.title=name+' · '+['啄木鸟','猛禽','小型洞巢鸟'][kind]+' · '+['Pájaro carpintero','Rapaz','Ave pequeña que anida en cavidades'][kind];
+    var sw=stage.clientWidth||500, sh=stage.clientHeight||460, best=null, bd=-1, tries=0;
+    while(tries++<8){
+      var cx=9+Math.random()*40, cy=30+Math.random()*30, md=1e9;
+      live.forEach(function(q){ var dx=(parseFloat(q.style.left)-cx)*sw/100, dy=(parseFloat(q.style.top)-cy)*sh/100; md=Math.min(md,Math.sqrt(dx*dx+dy*dy)); });
+      if(md>bd){ bd=md; best=[cx,cy]; } if(md>90) break;
+    }
+    b.style.left=best[0]+'%'; b.style.top=best[1]+'%';
+    if(!reduce) b.style.animationDuration=(6+Math.random()*4)+'s';
+    var f=PENT[Math.floor(Math.random()*PENT.length)]*(Math.random()<.4?.5:1);
+    b.dataset.f=f; b.dataset.m=mirage?'1':'0'; b.dataset.n=name;
+    function preview(){ if(b.classList.contains('gone')) return; b.dataset.heard='1'; tone(f,!mirage,.55); if(!soundOn) say('Turn sound on to hear it — or look for the shimmer.'); }
+    b.addEventListener('mouseenter',preview); b.addEventListener('focus',preview);
+    b.addEventListener('click',function(){
+      var touch = window.matchMedia('(hover: none)').matches;
+      if(touch && b.dataset.heard!=='1'){ preview(); return; }
+      collect(b);
+    });
+    stage.appendChild(b);
+    if(!mirage){ var os=document.createElement('div'); os.className='oshadow'; os.style.left=b.style.left; os.style.top='88%'; stage.appendChild(os); b._sh=os; }
+    if(mirage){ setTimeout(function(){ if(!b.classList.contains('gone')){ b.classList.add('gone'); setTimeout(function(){b.remove()},1300);} },11000); }
+  }
+  function collect(b){
+    if(b.classList.contains('gone')) return;
+    b.classList.add('gone'); setTimeout(function(){b.remove()},1300);
+    if(b._sh){ b._sh.classList.add('gone'); var shEl=b._sh; setTimeout(function(){shEl.remove()},1300); }
+    var f=+b.dataset.f;
+    if(b.dataset.m==='1'){
+      dissolved++; dissolveSound(f); ghostArm(); say('That sound was never there.');
+    } else {
+      kept++; growth=Math.min(1, growth+.125); tone(f*1.5,true,1);
+      say(WORDS[(kept-1)%WORDS.length]);
+      if(growth>=1 && !bloomed){
+        bloomed=true; setTimeout(function(){ flowers.classList.add('on'); say('Night bloom. These flowers open after dark and close the next afternoon.',true); },500);
+        [0,350,700].forEach(function(d,i){ setTimeout(function(){tone(PENT[i*2],true,.9)},600+d); });
+      }
+    }
+    draw();
+  }
+  function reset(){
+    $$('.orb,.oshadow',stage).forEach(function(o){o.remove()}); ghosts.innerHTML='';
+    growth=.02; kept=0; dissolved=0; bloomed=false; orbCount=0; flowers.classList.remove('on'); draw();
+    say(soundOn?'Hover an orb to listen. Click to keep it.':'Turn sound on, then hover an orb to listen.',true);
+    spawn(); spawn();
+  }
+  $('#resetBtn').addEventListener('click',reset);
+  draw(); cap.style.opacity=1;
+  // only run the loop while the demo is on screen
+  var demoIO = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ if(!timer){ spawn(); timer=setInterval(spawn,2600); } }
+      else { clearInterval(timer); timer=null; }
+    });
+  },{threshold:.2});
+  demoIO.observe(stage);
+})();
+</script>
+</body>
+</html>
