@@ -96,6 +96,7 @@ body:not([data-stage="0"]) #prelude{display:none}
 .btn{font:500 .9em var(--mono);border-radius:999px;padding:.55em 1.3em;border:1.5px solid var(--ink);background:transparent;color:var(--ink)}
 .btn.primary{background:var(--ink);color:var(--paper)}
 .btn:hover{opacity:.85}
+a.btn{text-decoration:none;display:inline-block}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:.7em;margin-top:.8em}
 .tile{border:1px solid #d8d6e6;border-top:.35em solid var(--c);border-radius:.7em;padding:.6em .8em;font-size:.88em}
 .tile b{font:500 .85em var(--mono);color:var(--c);letter-spacing:.06em;text-transform:uppercase;display:block}
@@ -1050,7 +1051,7 @@ function renderEnd(shifted){
   <div class="row"><input type="email" id="pcAddr" placeholder="${esc(tr('pcAddr'))}" autocomplete="email" aria-label="${esc(tr('pcAddr'))}"><button class="btn" id="pcMail">${esc(tr('pcEmail'))}</button></div>
   <div class="row" style="margin-top:.5em"><button class="btn primary" id="pcDl">${esc(tr('pcDownload'))}</button><button class="btn" id="pcCopy">${esc(tr('pcCopy'))}</button></div>
   <p class="note" id="pcmsg">${esc(tr('pcNote'))}</p>
-  <div class="row"><button class="btn primary" id="again">${esc(tr('again'))}</button></div>`);
+  <div class="row"><button class="btn primary" id="again">${esc(tr('again'))}</button>${/github\.io$/.test(location.hostname)?`<a class="btn" id="toPortfolio" href="index.html">${S.lang==='zh'?'\u2190 \u56de\u5230\u4f5c\u54c1\u96c6':S.lang==='es'?'\u2190 Volver al portafolio':'\u2190 Back to portfolio'}</a>`:''}</div>`);
  $('#pcDl').onclick=downloadPostcard;$('#pcMail').onclick=mailPostcard;$('#pcCopy').onclick=copyMsg;
  $('#again').onclick=()=>{closeModal();resetRun()};
 }
@@ -1067,7 +1068,7 @@ async function downloadPostcard(){
   catch(e){if(e&&e.code==='declined'){return}}
  }
  try{const a=document.createElement('a');a.href=S.postcard.url;a.download=name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
- m.textContent=tr('pcSaved')+' '+tr('pcBlocked');
+ m.textContent=S.lang==='zh'?'\u5df2\u5f00\u59cb\u4e0b\u8f7d\u3002\u82e5\u6ca1\u6709\u53cd\u5e94\uff0c\u8bf7\u957f\u6309\u6216\u53f3\u952e\u70b9\u51fb\u660e\u4fe1\u7247\u4fdd\u5b58\u3002':S.lang==='es'?'Descarga iniciada. Si no pasa nada, mant\u00e9n pulsada o haz clic derecho en la postal para guardarla.':'Download started. If nothing happens, press and hold or right-click the postcard to save it.';
 }
 function mailPostcard(){
  const addr=($('#pcAddr').value||'').trim(),m=$('#pcmsg');
