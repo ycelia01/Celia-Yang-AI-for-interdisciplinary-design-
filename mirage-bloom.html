@@ -273,6 +273,25 @@ th{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:
 footer{background:var(--night);color:var(--bloom);padding:56px 0;font-size:.9rem}
 footer a{color:var(--sun)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:20px 50px;justify-content:space-between}
+
+/* project directory (content box) */
+.dir{padding:clamp(48px,7vw,84px) 0}
+.dirbox{background:#fff;border:1px solid var(--line);border-radius:22px;padding:clamp(22px,4vw,40px);box-shadow:0 18px 50px -28px rgba(27,22,48,.35)}
+.dirbox h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin-bottom:.3em}
+.dirbox>p{max-width:62ch;color:var(--mute)}
+.dirlist{list-style:none;margin:1.6rem 0 1rem;padding:0;display:grid;gap:12px}
+.ditem{display:grid;grid-template-columns:90px 1fr auto;gap:18px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:16px 20px;background:var(--paper)}
+.ditem .dwk{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.ditem h3{font-size:1.3rem;margin:0 0 .15em}
+.ditem p{margin:0;font-size:.95rem;color:var(--mute)}
+.ditem.play{background:var(--night);color:var(--bloom);border-color:var(--night)}
+.ditem.play p{color:#cfc6e6}
+.ditem.soon{opacity:.75;border-style:dashed}
+.dlink{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:11px 18px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.dlink:hover{background:rgba(127,127,127,.15)}
+.play .dlink{background:var(--sun);color:var(--night);border-color:var(--sun)}
+.dnote{font-size:.9rem;color:var(--mute);border-top:1px solid var(--line);padding-top:1rem;margin-top:1.2rem}
+@media(max-width:720px){.ditem{grid-template-columns:1fr;gap:8px}.dlink{justify-self:start}}
 </style>
 </head>
 <body>
@@ -298,6 +317,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:20px 50px;justify-content:space-bet
     <li><a href="#s6" data-n="s6">06 Style + Sound</a></li>
     <li><a href="#s7" data-n="s7">07 Plan</a></li>
   </ul>
+  <a class="back" href="mirage-bloom-game.html">▶ Play demo</a>
   <a class="back" href="index.html">← Portfolio</a>
   <button class="sound" id="soundBtn" aria-pressed="false" title="Sound is off by default. Turn it on to hear the prototype.">♪ Sound off</button>
 </nav>
@@ -342,10 +362,28 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:20px 50px;justify-content:space-bet
     <div class="btns">
       <a class="btn fill" href="#s1">Start the pitch ↓</a>
       <a class="btn" href="#demo">Try the core loop ▸</a>
+      <a class="btn" href="mirage-bloom-game.html">Play the Week 2 demo ▸</a>
     </div>
   </div>
   <div class="meta">Theme: Hallucination<br>Browser · idle · relaxing</div>
 </header>
+
+<!-- DIRECTORY -->
+<section class="sec paper dir" id="dir" aria-labelledby="dirTitle">
+  <div class="wrap">
+    <div class="dirbox">
+      <span class="kicker">Project directory</span>
+      <h2 id="dirTitle">Mirage Bloom, from pitch to playable.</h2>
+      <p>This page is the Week 1 proposal. The Week 2 build is a playable demo you can open in a new page and play from start to finish.</p>
+      <ol class="dirlist">
+        <li class="ditem"><span class="dwk">Week 1</span><div><h3>Proposal</h3><p>Research, insight, narrative, style and sound, and the build plan. You are reading it now.</p></div><a class="dlink" href="#s1">Read the proposal ↓</a></li>
+        <li class="ditem play"><span class="dwk">Week 2</span><div><h3>Playable demo</h3><p>Five stages, sound cards that explain geophony, biophony and anthrophony, and a sound postcard you can download at the end.</p></div><a class="dlink" href="mirage-bloom-game.html">Play the demo ▸</a></li>
+        <li class="ditem soon"><span class="dwk">Week 3</span><div><h3>Test and refine</h3><p>Play-test with five people, tune the mirage clues, then check accessibility and phones.</p></div><span class="dlink" aria-disabled="true">Next</span></li>
+      </ol>
+      <p class="dnote"><b>What changed since this proposal:</b> the plan below says three stages, and the demo grew to five (Listen, Shimmer, Layer, Hum, Echo). The sounds in the demo are synthesised stand-ins, and real recordings are planned for Week 3.</p>
+    </div>
+  </div>
+</section>
 
 <!-- 01 GAME -->
 <section class="sec dark" id="s1">

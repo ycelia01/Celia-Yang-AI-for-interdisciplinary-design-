@@ -6,3 +6,21 @@
 .project-card.wide{grid-column:1/-1}
 .mirage-card{background:#1b1538;padding:0;height:auto;max-height:560px}
 .mirage-card img{width:100%;height:auto;display:block}
+
+/* Mirage Bloom content box + directory */
+.mirage-box{border:1px solid var(--line);background:#fbfaf3;padding:0;display:grid;grid-template-columns:1.25fr 1fr;gap:0;align-items:stretch}
+.mirage-box .mirage-card{display:block;max-height:none;height:100%;min-height:300px}
+.mirage-box .mirage-card img{height:100%;object-fit:cover}
+.mirage-box .project-title{margin:0;padding:28px 30px;display:block}
+.mirage-box .project-title h3{margin:8px 0 12px}
+.box-dir{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:10px}
+.box-dir a{display:grid;grid-template-columns:62px 1fr 34px;gap:12px;align-items:center;border:1px solid var(--line);padding:12px 14px;background:var(--paper)}
+.box-dir a:hover{border-color:var(--blue)}
+.box-dir a.play{background:var(--blue);color:var(--paper);border-color:var(--blue)}
+.box-dir .bd-wk{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+.box-dir .bd-t{font-size:12px;line-height:1.45;color:var(--muted)}
+.box-dir a.play .bd-t{color:#dfe6ff}
+.box-dir .bd-t b{display:block;font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.box-dir a.play .bd-t b{color:#fff}
+.box-dir .bd-go{font-size:22px;text-align:center}
+@media(max-width:820px){.mirage-box{grid-template-columns:1fr}.mirage-box .mirage-card{min-height:0;height:auto}.mirage-box .mirage-card img{height:auto}.mirage-box .project-title{padding:22px 20px}}
