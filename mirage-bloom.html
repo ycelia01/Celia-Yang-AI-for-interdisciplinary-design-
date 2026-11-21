@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mirage Bloom — Celia Yang</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><meta name="description" content="Mirage Bloom: a slow browser game about listening, where sounds grow a saguaro. Week 3: the refined game, with real sounds, painted scenes and a bobcat that bites mirages."><meta name="theme-color" content="#15122b">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/mirage-bloom/mb.css"></head><body><nav class="top" aria-label="Mirage Bloom"><a class="brand" href="mirage-bloom.html">Mirage Bloom</a><a class="l opt" href="mirage-bloom-week1.html">Week 1</a><a class="l opt" href="mirage-bloom-week2.html">Week 2</a><a class="l on" href="mirage-bloom.html" aria-current="page">Week 3</a><a class="l opt" href="index.html">← Portfolio</a><a class="go" href="mirage-bloom-game.html">▶ Play</a></nav>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/mirage-bloom/mb.css"></head><body><nav class="top" aria-label="Mirage Bloom"><a class="brand" href="mirage-bloom.html">Mirage Bloom</a><a class="l opt" href="mirage-bloom-week1.html">Week 1</a><a class="l opt" href="mirage-bloom-week2.html">Week 2</a><a class="l on" href="mirage-bloom.html" aria-current="page">Week 3</a><a class="l opt" href="#research">Research</a><a class="l opt" href="index.html">← Portfolio</a><a class="go" href="mirage-bloom-game.html">▶ Play</a></nav>
 <header class="hero" style="background-image:url(assets/mirage-bloom/w3-afternoon.webp)"><div class="wrap">
 <span class="kicker">AI for Design · Week 03 · Refined game</span><h1>Mirage <em>Bloom</em></h1>
 <p class="sub">A slow browser game about listening, where sounds grow a saguaro. Some are mirages, and you learn to tell what is real.</p>
-<div class="btns"><a class="btn fill" href="mirage-bloom-game.html">▶ Play the game</a><a class="btn" href="#play">Play it on this page ↓</a><a class="btn" href="#weeks">Week 1 and Week 2 ↓</a></div></div></header>
+<div class="btns"><a class="btn fill" href="mirage-bloom-game.html">▶ Play the game</a><a class="btn" href="#play">Play it on this page ↓</a><a class="btn" href="#feedback">Feedback and changes ↓</a><a class="btn" href="#research">Research ↓</a><a class="btn" href="#weeks">Week 1 and Week 2 ↓</a></div></div></header>
 
 <section class="sec" id="play"><div class="wrap"><span class="kicker">Play</span><h2>Headphones on, then listen.</h2>
 <p class="lead">The game runs in your browser. It opens with a short how-to-play card. You can load it below, or open it full screen.</p>
@@ -43,6 +43,79 @@
 <tr><th>Mirage tells</th><td>Scanner, static, metal hits, low distorted hits and laser pulses, mixed quietly under every fake sound.</td></tr>
 <tr><th>Finale</th><td>A flute when the saguaro blooms.</td></tr></tbody></table></div></section>
 
+<section class="sec sand" id="feedback"><div class="wrap"><span class="kicker">Feedback and playtesting</span><h2>What I listened to, and what I did about it.</h2>
+<p class="lead">No formal playtest has happened yet; five-person testing is the next step. This round answers the feedback I got on the Week 2 demo and my own play sessions while building. I only mark something as built when it is in the game you can play above.</p>
+<table class="snd"><tbody>
+<tr><th>Visual direction</th><td>The Week 2 demo was a plain desert. I made nine reference images (a blurry opening, daytime scenes, late afternoon and dawn) and asked for the game to look like them. <span class="chip b">Built</span> Four painted scenes and a saguaro that takes each scene's shape. The last three images stay as the postcard artworks.</td></tr>
+<tr><th>Shapes you can read</th><td>I set a rule: each sound family gets its own bubble shapes. <span class="chip b">Built</span> Clouds, stars and drops for weather and water; leaves, owls and moons for living things; cars, planes, trucks and feet for people and machines.</td></tr>
+<tr><th>Mirages should cost something</th><td>A wrong keep used to cost nothing, so a mirage did not feel like a trick. <span class="chip b">Built</span> The bobcat bites the bubble and a distant saguaro is damaged. <span class="chip a">Planned</span> A wrong keep also wastes water.</td></tr>
+<tr><th>The animal should react</th><td>In Week 2 the bobcat was scenery. <span class="chip b">Built</span> It runs over and bites a kept mirage. <span class="chip a">Planned</span> Moods for real sounds, noise and calm.</td></tr>
+<tr><th>Each level, a different scenery</th><td><span class="chip b">Built</span> The painted scenes change with the stages. <span class="chip a">Planned</span> Five real Sonoran habitats tied to times of day.</td></tr>
+<tr><th>Explaining the game</th><td>I wanted players to know the rule before they start. <span class="chip b">Built</span> A short how-to-play at the start, in English, Chinese and Spanish.</td></tr>
+<tr><th>This year's flood</th><td>I wanted the game to reflect this year's Southwest weather, drought and flood. <span class="chip b">Built</span> The opening plays a real flood field recording, with a note about the 2026 floods. <span class="chip a">Planned</span> A water meter with a dry edge and a flood edge.</td></tr>
+<tr><th>Sound pollution and wellbeing</th><td>I researched the evidence (see below). <span class="chip a">Planned</span> A noise-load meter and a Hush action. Nothing in the game claims to treat stress.</td></tr>
+<tr><th>Enemies and a symphony</th><td><span class="chip a">Planned</span> Gentle hazards with no health bar, and an Echo stage where you arrange what you kept into a piece.</td></tr>
+</tbody></table>
+<p class="note">Built = playable in this version. Planned = in the Week 3 refinement plan, not yet built.</p></div></section>
+
+<section class="sec" id="changes"><div class="wrap"><span class="kicker">Changes and their effect</span><h2>How each change improves the experience.</h2>
+<table class="snd"><tbody>
+<tr><th>Recorded sounds</th><td>Real recordings replace many synthesised tones, so the desert sounds like a place. Real sounds vary a little each time; a mirage replays one exact take, which gives careful listeners something to catch.</td></tr>
+<tr><th>Bubble shapes</th><td>Players can narrow down a sound by looking, then decide by listening and by checking whether it has a source on the land.</td></tr>
+<tr><th>Bobcat bite</th><td>A mistake becomes something you see and hear, not a score. The consequence teaches that the sound was fake without a pop-up lecture.</td></tr>
+<tr><th>Damaged distant saguaros</th><td>The desert remembers your mistakes: bite mark, broken top, cracked trunk. They are never destroyed, so the game stays calm.</td></tr>
+<tr><th>Painted backdrops</th><td>The game sits on top of the paintings, so the look matches my drawings and each stage feels like a new place. The scenes crossfade slowly, not cut.</td></tr>
+<tr><th>Saguaro styles</th><td>My saguaro changes shape with each scene, so growth reads visually and not only as a counter.</td></tr>
+<tr><th>How to play</th><td>The rule (keep the real, let the mirages go) is clear in under a minute, and the opening stays quiet.</td></tr>
+<tr><th>Flood recording</th><td>The first sound is true. It sets the theme of real versus apparent water and ties the game to this year.</td></tr>
+</tbody></table></div></section>
+
+<section class="sec dark" id="ai"><div class="wrap"><span class="kicker">AI tools and my decisions</span><h2>What the AI did, and what I decided.</h2>
+<div class="two" style="align-items:start"><div><h3>AI tools I used</h3>
+<p><b>Claude</b> for research and checking sources, for writing and testing the game code, for trimming and cleaning my sound recordings, and for building these portfolio pages. In Week 1 it also made vector mockups from my drawings.</p>
+<p><b>An AI image tool</b> for the scene paintings, working from my Week 1 drawings and references.</p>
+<p>The AI summaries needed checking. In Week 1 one claimed who composed the Ducklings music, which I could not verify, so I did not use it. <a href="mirage-bloom-week1.html#s3" style="color:var(--sun)">Read what the analysis missed ↗</a></p></div>
+<div><h3>Decisions I made myself</h3>
+<ul style="padding-left:1.1em;margin:.4em 0 0">
+<li>The idea: a calm game about hallucination, where sound tells you what is real.</li>
+<li>Which sounds to use, and their grouping into geophony, biophony and anthrophony.</li>
+<li>Using the real flood field recording as the opening, and the 2026 flood as the theme.</li>
+<li>The nine reference images, how I labelled them, and which three are for the postcard.</li>
+<li>The bubble shape rule, so shape shows the family and never whether it is real.</li>
+<li>The bobcat bite for a kept mirage, and the damage to distant saguaros.</li>
+<li>Putting the game on top of the painted images instead of redrawing the scenes.</li>
+<li>No fail state, and a how-to at the start.</li>
+<li>How my portfolio is organised: one page per week, kept for reference.</li></ul></div></div>
+<p class="note">The AI proposed and built; I chose the direction, supplied the recordings and drawings, and reviewed each result.</p></div></section>
+
+<section class="sec" id="research"><div class="wrap"><span class="kicker">Research</span><h2>The research behind Week 3.</h2>
+<p class="lead">Week 1 set the foundations. Week 3 added sourced research on saguaro biology, this year's floods and noise.</p>
+<div class="grid">
+<div class="card"><div class="b"><h3>Week 1 research</h3>
+<p><a href="mirage-bloom-week1.html#s2">Research: the Ducklings-style game</a></p>
+<p><a href="mirage-bloom-week1.html#s3">Insight: what the analysis missed</a></p>
+<p><a href="mirage-bloom-week1.html#s4">Narrative: Hallucination, heard</a></p>
+<p><a href="mirage-bloom-week1.html#s6">Style and sound</a></p>
+<p><a href="mirage-bloom-week1.html#s7">Plan for Weeks 2 and 3</a></p></div></div>
+<div class="card"><div class="b"><h3>Why a saguaro is hard to grow</h3>
+<p><a href="https://www.nps.gov/sagu/learn/nature/how-saguaros-grow.htm">NPS, How Saguaros Grow</a></p>
+<p><a href="https://www.nps.gov/parkhistory/online_books/science/8/chap4c.htm">NPS Monograph 8, establishment</a></p>
+<p><a href="https://arizonahighways.com/article/born-survivor">Arizona Highways, Born Survivor</a></p>
+<p><a href="https://www.axios.com/local/phoenix/2025/05/19/scorching-saguaros-heat-drought-cactus-deaths">Axios Phoenix, heat and drought</a></p>
+<p><a href="https://www.nps.gov/articles/lesser-long-nose-bat.htm">NPS, lesser long-nosed bat</a></p></div></div>
+<div class="card"><div class="b"><h3>The 2026 floods</h3>
+<p><a href="https://www.azpm.org/news/2026-10-07/231438-southern-arizona-hits-record-high-in-flash-flood-warnings-this-monsoon">AZPM, record flash-flood warnings</a></p>
+<p><a href="https://en.wikipedia.org/wiki/2026_Grand_Canyon_flood">Wikipedia, 2026 Grand Canyon flood</a></p>
+<p><a href="https://www.western-water.com/2026/11/06/the-2026-southwest-floods-a-look-at-reservoir-gains-and-damage/">Western Water, Southwest floods</a></p>
+<p><a href="https://csmonitor.com/Environment/2026/1108/Floods-bring-rare-relief-to-US-Southwest-reservoirs-as-Lake-Powell-rises-20-feet">CS Monitor, Lake Powell rises</a></p></div></div>
+<div class="card"><div class="b"><h3>Noise and wellbeing</h3>
+<p><a href="https://www.who.int/europe/publications/i/item/9789289053563">WHO noise guidelines (2018)</a></p>
+<p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8040792">Buxton et al. 2021, natural sounds and health</a></p>
+<p><a href="https://www.eurekalert.org/news-releases/743525">Francis et al. 2012, noise and pollination</a></p>
+<p><a href="https://par.nsf.gov/servlets/purl/10311532">Francis 2021, noise and seedling recruitment</a></p></div></div>
+</div>
+<p class="note">The flood-year articles were read as search excerpts, not in full. The Week 3 plan applies the noise studies as illustration, not as a claim about saguaros or health.</p></div></section>
+
 <section class="sec dusk" id="weeks"><div class="wrap"><span class="kicker">Previous weeks</span><h2 style="color:var(--bloom)">Kept for reference, one page each.</h2>
 <p class="lead">The earlier work is still here. Open a week to read it or play that version.</p>
 <div class="weeks">
@@ -51,7 +124,7 @@
 </div></div></section>
 
 <section class="sec"><div class="wrap"><span class="kicker">What is next</span><h2>Test and refine.</h2>
-<p class="lead">Next I will play-test with five people, tune how obvious the mirage clues are, then check accessibility and phones.</p></div></section>
+<p class="lead">Next I will play-test with five people, tune how obvious the mirage clues are, then check accessibility and phones. The plan also covers the water meter, noise and Hush, gentle hazards and an Echo symphony.</p></div></section>
 <footer><div class="wrap"><div><b style="font-family:var(--serif);font-size:1.2rem;color:var(--bloom)">Mirage Bloom</b><br>AI for Design · Hallucination project<br>Celia Yang</div>
 <div><a href="mirage-bloom.html">Week 3 · refined game</a><br><a href="mirage-bloom-week2.html">Week 2 · build</a><br><a href="mirage-bloom-week1.html">Week 1 · proposal</a><br><a href="index.html">Portfolio</a></div>
 <div style="opacity:.85">Research and scene paintings were made with AI assistance. The flood sound in the opening is a real-scene field recording; other sounds come from a sound library.</div></div></footer>

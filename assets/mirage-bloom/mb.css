@@ -61,3 +61,7 @@ footer{background:var(--night);color:#c9c0e0;padding:40px 0;font-size:.88rem}
 footer .wrap{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 footer a{color:var(--bloom)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.wk,.btn{transition:none}}
+.card .b p a{color:var(--sage-d);text-underline-offset:3px}.card .b p a:hover{color:var(--ember)}
+.sec.sand td a,.sec td a,.sec .lead a{color:var(--sage-d)}
+.sec.dark ul li{margin:.35em 0}
+table.snd td .chip{margin-right:6px;font-size:.68rem;padding:1px 8px}
